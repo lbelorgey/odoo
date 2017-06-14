@@ -207,6 +207,13 @@ class PosOrder(models.Model):
         }
         return values
 
+    def _get_account_move_line_product_key(self, values):
+        return (
+            'product',
+            values['partner_id'],
+            (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']),
+            values['analytic_account_id'], values['debit'] > 0)
+
     def _action_create_invoice_line(self, line=False, invoice_id=False):
         InvoiceLine = self.env['account.invoice.line']
         inv_name = line.product_id.name_get()[0][1]
@@ -300,7 +307,7 @@ class PosOrder(models.Model):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['partner_id'], (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']), values['analytic_account_id'], values['debit'] > 0)
+                    key = self._get_account_move_line_product_key(values)
                 elif data_type == 'tax':
                     key = ('tax', values['partner_id'], values['tax_line_id'], values['debit'] > 0)
                 elif data_type == 'counter_part':

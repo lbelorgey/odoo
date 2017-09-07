@@ -185,7 +185,8 @@ class ProcurementOrder(models.Model):
     def _run(self):
         if self.rule_id.action == 'move':
             if not self.rule_id.location_src_id:
-                self.message_post(body=_('No source location defined!'))
+                log = self.log or ''
+                self.write({'log': fields.Datetime.now() + ': ' + _('No source location defined!') + '\n' + log})
                 return False
             # create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             self.env['stock.move'].sudo().create(self._get_stock_move_values())
@@ -228,7 +229,8 @@ class ProcurementOrder(models.Model):
             elif move_all_done_or_cancel and not move_all_cancel:
                 return True
             else:
-                self.message_post(body=_('All stock moves have been cancelled for this procurement.'))
+                log = self.log or ''
+                self.write({'log': fields.Datetime.now() + ': ' + _('All stock moves have been cancelled for this procurement.') + '\n' + log})
                 # TDE FIXME: strange that a check method actually modified the procurement...
                 self.write({'state': 'cancel'})
                 return False

@@ -334,6 +334,7 @@ class PosOrder(models.Model):
                         current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
                         current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
                         current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
+                        current_value['pos_order_ids'] = current_value.get('pos_order_ids', []) + values.get('pos_order_ids', [])
                 else:
                     grouped_data[key].append(values)
 
@@ -375,7 +376,8 @@ class PosOrder(models.Model):
                         'credit': ((tax['amount'] > 0) and tax['amount']) or 0.0,
                         'debit': ((tax['amount'] < 0) and -tax['amount']) or 0.0,
                         'tax_line_id': tax['id'],
-                        'partner_id': partner_id
+                        'partner_id': partner_id,
+                        'pos_order_ids': [(4, order.id, False)]
                     })
 
             # round tax lines per order
@@ -392,7 +394,8 @@ class PosOrder(models.Model):
                 'account_id': order_account,
                 'credit': ((order.amount_total < 0) and -order.amount_total) or 0.0,
                 'debit': ((order.amount_total > 0) and order.amount_total) or 0.0,
-                'partner_id': partner_id
+                'partner_id': partner_id,
+                'pos_order_ids': [(4, order.id, False)]
             })
 
             order.write({'state': 'done', 'account_move': move.id})
@@ -411,7 +414,7 @@ class PosOrder(models.Model):
 
     def _reconcile_payments(self):
         for order in self:
-            aml = order.statement_ids.mapped('journal_entry_ids').mapped('line_ids') | order.account_move.line_ids | order.invoice_id.move_id.line_ids
+            aml = order.statement_ids.mapped('journal_entry_ids').mapped('line_ids') | order.account_move_line_ids | order.invoice_id.move_id.line_ids
             aml = aml.filtered(lambda r: not r.reconciled and r.account_id.internal_type == 'receivable' and r.partner_id == order.partner_id.commercial_partner_id)
 
             try:
@@ -489,6 +492,7 @@ class PosOrder(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
+    account_move_line_ids = fields.Many2many('account.move.line', 'account_move_line_pos_order_rel', 'pos_order_id', 'account_move_line_id')
 
     @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
     def _compute_amount_all(self):

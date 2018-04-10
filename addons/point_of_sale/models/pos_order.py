@@ -194,16 +194,14 @@ class PosOrder(models.Model):
                    values['debit'] > 0)
         return key
 
-    def _prepare_product_account_move_line(self, line, partner_id, account_id):
+    def _prepare_product_account_move_line(self, line, partner_id, account_id,
+                                           taxe_ids):
         name = line.product_id.name
         if line.notice:
             # add discount reason in move
             name = name + ' (' + line.notice + ')'
 
         amount = line.price_subtotal
-	# Just like for invoices, a group of taxes must be present on this base line
-        # As well as its children
-        base_line_tax_ids = _flatten_tax_and_children(line.tax_ids_after_fiscal_position).filtered(lambda tax: tax.type_tax_use in ['sale', 'none'])
         values = {
             'name': name,
             'quantity': line.qty,
@@ -212,7 +210,7 @@ class PosOrder(models.Model):
             'analytic_account_id': self._prepare_analytic_account(line),
             'credit': ((amount > 0) and amount) or 0.0,
             'debit': ((amount < 0) and -amount) or 0.0,
-            'tax_ids': [(6, 0, base_line_tax_ids.ids)],
+            'tax_ids': [(6, 0, taxe_ids)],
             'partner_id': partner_id
         }
         return values
@@ -358,9 +356,12 @@ class PosOrder(models.Model):
                                     % (line.product_id.name, line.product_id.id))
 
                 # Create a move for the line for the order line
+	        # Just like for invoices, a group of taxes must be present on this base line
+                # As well as its children
+                base_line_tax_ids = _flatten_tax_and_children(line.tax_ids_after_fiscal_position).filtered(lambda tax: tax.type_tax_use in ['sale', 'none'])
                 insert_data(
                     'product', self._prepare_product_account_move_line(
-                        line, partner_id, income_account))
+                        line, partner_id, income_account, base_line_tax_ids.ids))
 
                 # Create the tax lines
                 taxes = line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == current_company.id)

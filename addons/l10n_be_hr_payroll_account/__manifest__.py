@@ -10,7 +10,7 @@ Accounting Data for Belgian Payroll Rules.
 ==========================================
     """,
 
-    'auto_install': True,
+    'auto_install': False,
     'data':[
         'data/l10n_be_hr_payroll_account_data.xml',
     ],

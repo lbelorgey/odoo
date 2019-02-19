@@ -14,5 +14,5 @@
     'demo': [
         'data/mass_mailing_demo.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

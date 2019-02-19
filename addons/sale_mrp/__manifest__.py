@@ -19,5 +19,5 @@ from sales order. It adds sales name and sales Reference on production order.
     ],
     'demo': [],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

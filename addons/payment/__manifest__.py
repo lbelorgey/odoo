@@ -25,6 +25,6 @@
         'security/payment_security.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'uninstall_hook': 'uninstall_hook',
 }

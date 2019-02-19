@@ -16,5 +16,5 @@ Bridge module adding UX requirements to ease mass mailing of event track speaker
     'data': [
         'views/event_views.xml'
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

@@ -16,7 +16,7 @@ The module adds following features:
 """,
     'depends': ['l10n_fr_certification'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'application': False,
     'data': [
         'views/account_sale_closure.xml',

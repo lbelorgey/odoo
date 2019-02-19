@@ -11,5 +11,5 @@
         'security/ir.model.access.csv',
     ],
     'depends': ['website'],
-    'auto_install': True,
+    'auto_install': False,
 }

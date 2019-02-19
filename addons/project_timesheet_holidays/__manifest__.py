@@ -22,6 +22,6 @@ on leaves. Project and task can be configured company-wide.
     ],
     'demo': [],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'post_init_hook': 'post_init',
 }

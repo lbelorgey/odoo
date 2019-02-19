@@ -15,5 +15,5 @@ Generate leads or opportunities in the CRM app from a contact form published on 
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

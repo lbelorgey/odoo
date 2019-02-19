@@ -12,5 +12,5 @@
         'views/calendar_views.xml',
     ],
     'application': False,
-    'auto_install': True,
+    'auto_install': False,
 }

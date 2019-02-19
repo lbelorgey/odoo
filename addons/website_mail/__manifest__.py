@@ -20,5 +20,5 @@ It is responsible of comments moderation for published documents (forum, slides,
         'static/src/xml/website_mail.xml'
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

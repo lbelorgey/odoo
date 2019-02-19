@@ -36,6 +36,6 @@ have real delivered quantities in sales orders.
     'qweb': [
         'static/src/xml/timesheet_plan.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
     'uninstall_hook': 'uninstall_hook',
 }

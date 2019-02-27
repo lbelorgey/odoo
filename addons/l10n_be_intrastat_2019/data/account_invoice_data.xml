@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.server" id="action_set_intrastat_country">
+            <field name="name">Set Intrastat Country</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="binding_model_id" ref="account.model_account_invoice" />
+            <field name="state">code</field>
+            <field name="code">
+for line in records.mapped('invoice_line_ids').filtered(lambda r: not r.intrastat_product_origin_country_id):
+    line._onchange_product_intrastat()
+            </field>
+        </record>
+    </data>
+</odoo>

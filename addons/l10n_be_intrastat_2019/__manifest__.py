@@ -10,6 +10,8 @@ Adds the possibility to specify the origin country of goods and the partner VAT 
     'depends': ['l10n_be_intrastat'],
     'data': [
         'views/account_invoice_line_view.xml',
+        'views/product_template_view.xml',
+        'data/account_invoice_data.xml',
     ],
     'auto_install': True,
 }

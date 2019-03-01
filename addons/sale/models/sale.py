@@ -504,6 +504,33 @@ class SaleOrder(models.Model):
         return action
 
     @api.multi
+    def _finalize_invoices(self, invoices, references):
+        for invoice in invoices.values():
+            invoice.compute_taxes()
+            if not invoice.invoice_line_ids:
+                raise UserError(_(
+                    'There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
+            # If invoice is negative, do a refund invoice instead
+            if invoice.amount_total < 0:
+                invoice.type = 'out_refund'
+                for line in invoice.invoice_line_ids:
+                    line.quantity = -line.quantity
+            # Use additional field helper function (for account extensions)
+            for line in invoice.invoice_line_ids:
+                line._set_additional_fields(invoice)
+            # Necessary to force computation of taxes. In account_invoice, they are triggered
+            # by onchanges, which are not triggered when doing a create.
+            invoice.compute_taxes()
+            # Idem for partner
+            so_payment_term_id = invoice.payment_term_id.id
+            invoice._onchange_partner_id()
+            # To keep the payment terms set on the SO
+            invoice.payment_term_id = so_payment_term_id
+            invoice.message_post_with_view('mail.message_origin_link',
+                values={'self': invoice, 'origin': references[invoice]},
+                subtype_id=self.env.ref('mail.mt_note').id)
+
+    @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         """
         Create the invoice associated to the SO.
@@ -609,6 +636,8 @@ class SaleOrder(models.Model):
             invoice.message_post_with_view('mail.message_origin_link',
                 values={'self': invoice, 'origin': references[invoice]},
                 subtype_id=self.env.ref('mail.mt_note').id)
+
+        self._finalize_invoices(invoices, references)
         return [inv.id for inv in invoices.values()]
 
     @api.multi

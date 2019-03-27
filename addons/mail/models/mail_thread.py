@@ -21,6 +21,8 @@ except ImportError:
 from collections import namedtuple
 from email.message import Message
 from email.utils import formataddr
+from email.parser import Parser
+from email.policy import default
 from lxml import etree
 from werkzeug import url_encode
 from werkzeug import urls
@@ -1166,7 +1168,7 @@ class MailThread(models.AbstractModel):
             if bounce_match:
                 bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), bounce_match.group(3)
 
-                email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
+                email_part = next((part for part in message.walk() if part.get_content_type() in ['message/rfc822', 'text/rfc822-headers']), None)
                 dsn_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 
                 partners, partner_address = self.env['res.partner'], False
@@ -1181,7 +1183,10 @@ class MailThread(models.AbstractModel):
 
                 mail_message = self.env['mail.message']
                 if email_part:
-                    email = email_part.get_payload()[0]
+                    if email_part.is_multipart():
+                        email = email_part.get_payload()[0]
+                    else:
+                        email = Parser(policy=default).parsestr(email_part.get_payload())
                     bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
                     mail_message = MailMessage.sudo().search([('message_id', 'in', bounced_message_id)])
 

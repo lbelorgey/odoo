@@ -82,7 +82,6 @@ class ProcurementOrder(models.Model):
     _name = "procurement.order"
     _description = "Procurement"
     _order = 'priority desc, date_planned, id asc'
-    _inherit = ['mail.thread','ir.needaction_mixin']
 
 
     name = fields.Text('Description', required=True)
@@ -95,15 +94,14 @@ class ProcurementOrder(models.Model):
     # These two fields are used for scheduling
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='1',
-        required=True, index=True, track_visibility='onchange')
+        required=True, index=True)
     date_planned = fields.Datetime(
         'Scheduled Date', default=fields.Datetime.now,
-        required=True, index=True, track_visibility='onchange')
+        required=True, index=True)
 
     group_id = fields.Many2one('procurement.group', 'Procurement Group')
     rule_id = fields.Many2one(
         'procurement.rule', 'Rule',
-        track_visibility='onchange',
         help="Chosen rule for the procurement resolution. Usually chosen by the system but can be manually set by the procurement manager to force an unusual behavior.")
 
     product_id = fields.Many2one(
@@ -125,7 +123,8 @@ class ProcurementOrder(models.Model):
         ('exception', 'Exception'),
         ('running', 'Running'),
         ('done', 'Done')], string='Status', default='confirmed',
-        copy=False, required=True, track_visibility='onchange')
+        copy=False, required=True)
+    log = fields.Text('Log', readonly=1)
 
     @api.model
     def _needaction_domain_get(self):
@@ -186,7 +185,8 @@ class ProcurementOrder(models.Model):
                         else:
                             procurement.write({'state': 'exception'})
                     else:
-                        procurement.message_post(body=_('No rule matching this procurement'))
+                        log = procurement.log or ''
+                        procurement.write({'log': fields.Datetime.now() + ': ' + _('No rule matching this procurement') + '\n' + log})
                         procurement.write({'state': 'exception'})
                     if autocommit:
                         self.env.cr.commit()

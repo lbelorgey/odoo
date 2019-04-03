@@ -319,7 +319,8 @@ class InventoryLine(models.Model):
     product_name = fields.Char(
         'Product Name', related='product_id.name', store=True, readonly=True)
     product_code = fields.Char(
-        'Product Code', related='product_id.default_code', store=True)
+        'Product Code', related='product_id.default_code', store=True,
+        readonly=True)
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         required=True,
@@ -332,7 +333,8 @@ class InventoryLine(models.Model):
         index=True, required=True)
     # TDE FIXME: necessary ? only in order -> replace by location_id
     location_name = fields.Char(
-        'Location Name', related='location_id.complete_name', store=True)
+        'Location Name', related='location_id.complete_name', store=True,
+        readonly=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Pack', index=True)
     prod_lot_id = fields.Many2one(

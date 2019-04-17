@@ -17,5 +17,5 @@ View Link Tracker Statistics on eCommerce dashboard
         'data/sale_order_demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'auto_install': True,
+    'auto_install': False,
 }

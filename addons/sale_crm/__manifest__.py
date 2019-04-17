@@ -23,5 +23,5 @@ modules.
         'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

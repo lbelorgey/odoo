@@ -23,5 +23,5 @@ Use for update your text memo in real time with the following user that you invi
     ],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': False,
 }

@@ -1,7 +1,7 @@
 {
     'name': "Password Policy support for Signup",
     'depends': ['auth_password_policy', 'auth_signup'],
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'views/assets.xml',
         'views/signup_templates.xml',

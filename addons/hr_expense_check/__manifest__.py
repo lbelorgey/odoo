@@ -8,7 +8,7 @@
     """,
     'version': '1.0',
     'depends': ['account_check_printing', 'hr_expense'],
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'views/payment.xml',
     ],

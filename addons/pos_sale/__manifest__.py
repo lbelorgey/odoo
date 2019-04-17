@@ -21,5 +21,5 @@ This module adds a custom Sales Team for the point of sale to be able to view an
         'views/pos_config_views.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

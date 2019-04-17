@@ -22,5 +22,5 @@ by external providers and will automatically generate purchase orders directed t
     ],
     'demo': [
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

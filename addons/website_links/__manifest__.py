@@ -14,5 +14,5 @@ Those trackers can be used in Google Analytics to track clicks and visitors, or 
         'security/ir.model.access.csv',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'auto_install': True,
+    'auto_install': False,
 }

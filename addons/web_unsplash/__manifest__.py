@@ -11,5 +11,5 @@
         'views/res_config_settings_view.xml',
         'views/web_unsplash_templates.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

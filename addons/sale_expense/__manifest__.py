@@ -26,5 +26,5 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
     'demo': ['data/sale_expense_demo.xml'],
     'test': [],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

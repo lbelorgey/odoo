@@ -15,5 +15,5 @@ from purchase order.
     """,
     'depends': ['mrp', 'purchase'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

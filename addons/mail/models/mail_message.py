@@ -7,7 +7,7 @@ import re
 from binascii import Error as binascii_error
 from operator import itemgetter
 from email.utils import formataddr
-from openerp.http import request
+from odoo.http import request
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError

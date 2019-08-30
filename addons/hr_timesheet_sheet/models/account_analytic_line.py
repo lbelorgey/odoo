@@ -63,7 +63,18 @@ class AccountAnalyticLine(models.Model):
 
         for line in self:
             if line.sheet_id and line.sheet_id.state not in ('draft', 'new'):
-                raise UserError(_('You cannot modify an entry in a confirmed timesheet.'))
+                raise UserError(_(
+                    "You cannot modify an entry in a confirmed timesheet. "
+                    "(%s, %s, %s)"
+                ) % (
+                    line.sheet_id.display_name,
+                    line.sheet_id.employee_id.display_name,
+                    ' - '.join([
+                        line.project_id.name,
+                        line.date,
+                        line.name,
+                    ])
+                ))
         return True
 
     @api.model

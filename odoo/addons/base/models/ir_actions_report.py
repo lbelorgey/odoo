@@ -178,9 +178,14 @@ class IrActionsReport(models.Model):
         if attachment.mimetype.startswith('image'):
             stream = io.BytesIO(base64.b64decode(attachment.datas))
             img = Image.open(stream)
+<<<<<<< HEAD
             output_stream = io.BytesIO()
             img.convert("RGB").save(output_stream, format="pdf")
             return output_stream
+=======
+            img.convert("RGB").save(stream, format="pdf")
+            return stream
+>>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)
         return io.BytesIO(base64.decodebytes(attachment.datas))
 
     def retrieve_attachment(self, record):

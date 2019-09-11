@@ -335,7 +335,15 @@ class PaymentTransactionStripe(models.Model):
             self.write(vals)
             self._set_transaction_pending()
             return True
+<<<<<<< HEAD
         if status == 'requires_payment_method':
+=======
+        else:
+            error = tree.get('failure_message')
+            _logger.warning(error)
+            vals.update({'state_message': error})
+            self.write(vals)
+>>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)
             self._set_transaction_cancel()
             self.acquirer_id._stripe_request('payment_intents/%s/cancel' % self.stripe_payment_intent)
             return False

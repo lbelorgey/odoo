@@ -30,7 +30,11 @@ class TestPyLint(TransactionCase):
         'unreachable',
 
         'mixed-indentation',
+<<<<<<< HEAD
         'sql-injection',
+=======
+        'deprecated-method',
+>>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)
     ]
 
     BAD_FUNCTIONS = [
@@ -44,7 +48,7 @@ class TestPyLint(TransactionCase):
     ] + list(tools.SUPPORTED_DEBUGGER)
 
     def _skip_test(self, reason):
-        _logger.warn(reason)
+        _logger.warning(reason)
         self.skipTest(reason)
 
     def test_pylint(self):

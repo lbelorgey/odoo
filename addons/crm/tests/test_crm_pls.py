@@ -80,6 +80,7 @@ class TestCRMPLS(TransactionCase):
         # As the cron is computing and writing in SQL queries, we need to invalidate the cache
         leads.invalidate_cache()
 
+<<<<<<< HEAD
         self.assertEquals(tools.float_compare(leads[3].automated_probability, 33.49, 2), 0)
         self.assertEquals(tools.float_compare(leads[7].automated_probability, 7.74, 2), 0)
 
@@ -103,3 +104,7 @@ class TestCRMPLS(TransactionCase):
         res_config_new = resConfig.new()
         self.assertEqual(fields.Date.to_string(res_config_new.predictive_lead_scoring_start_date),
             str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
+=======
+        self.assertEqual(tools.float_compare(leads[3].automated_probability, 33.49, 2), 0)
+        self.assertEqual(tools.float_compare(leads[7].automated_probability, 7.74, 2), 0)
+>>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)

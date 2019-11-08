@@ -413,7 +413,8 @@ class ProductProduct(models.Model):
             supplier_info_by_template = {}
             for r in supplier_info:
                 supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
-        for product in self.sudo():
+
+        for product in self.sudo().with_prefetch(self._prefetch):
             # display only the attributes with multiple possible values on the template
             variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
             variant = product.attribute_value_ids._variant_name(variable_attributes)

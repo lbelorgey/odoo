@@ -10,7 +10,7 @@
         'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',
     ],
-    'external_dependencies' : {
-        'python' : ['ldap'],
+    'external_dependencies': {
+        'python': ['ldap'],
     }
 }

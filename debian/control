@@ -46,7 +46,7 @@ Replaces: tinyerp-server, openerp-server, openerp-web, openerp
 Recommends:
  ${python3:Recommends},
  postgresql,
- python3-pyldap,
+ python3-ldap,
  python3-qrcode,
  python3-vobject,
 Description: Open Source Apps To Grow Your Business

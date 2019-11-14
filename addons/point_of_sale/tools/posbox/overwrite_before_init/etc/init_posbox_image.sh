@@ -61,7 +61,7 @@ PKGS_TO_INSTALL="
     python3-docutils \
     python3-pil \
     python3-jinja2 \
-    python3-ldap3 \
+    python3-ldap \
     python3-lxml \
     python3-mako \
     python3-mock \

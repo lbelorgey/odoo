@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
+import calendar
 import logging
 import pytz
 from psycopg2 import sql, OperationalError, errorcodes
@@ -149,6 +150,10 @@ class IrSequence(models.Model):
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda s: s.env.company)
     use_date_range = fields.Boolean(string='Use subsequences per date_range')
+    date_range_type = fields.Selection(
+        [('year', 'Year'), ('fiscalyear', 'Fiscal year'), ('month', 'Month'), ('week', 'Week'), ('day', 'Day')],
+        'Type of date range', required=True, default='year',
+        help="Type of date range that will be automatically create if doesn't exist.")
     date_range_ids = fields.One2many('ir.sequence.date_range', 'sequence_id', string='Subsequences')
 
     @api.model
@@ -239,9 +244,31 @@ class IrSequence(models.Model):
         return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
     def _create_date_range_seq(self, date):
-        year = fields.Date.from_string(date).strftime('%Y')
-        date_from = '{}-01-01'.format(year)
-        date_to = '{}-12-31'.format(year)
+        date = fields.Date.from_string(date)
+        if self.date_range_type == 'year':
+            date_from = date.replace(month=1, day=1)
+            date_to = date.replace(month=12, day=31)
+        elif self.date_range_type == 'fiscalyear':
+            fiscalyear_last_month = self.env.user.company_id.fiscalyear_last_month if hasattr(self.env.user.company_id, 'fiscalyear_last_month') else 12
+            fiscalyear_last_day = self.env.user.company_id.fiscalyear_last_day if hasattr(self.env.user.company_id, 'fiscalyear_last_day') else 31
+            date_to = date.replace(month=fiscalyear_last_month, day=fiscalyear_last_day)
+            if date > date_to:
+                date_to = date_to.replace(year=date_to.year + 1)
+            date_from = date_to + timedelta(days=1)
+            date_from = date_from.replace(year=date_from.year - 1)
+        elif self.date_range_type == 'month':
+            date_from = date.replace(day=1)
+            date_to = date.replace(day=calendar.monthrange(date.year, date.month)[1])
+        elif self.date_range_type == 'week':
+            weekday = date.weekday()
+            date_from = date + timedelta(days=-weekday)
+            date_to = date + timedelta(days=6-weekday)
+        elif self.date_range_type == 'day':
+            date_from = date
+            date_to = date
+        else:
+            date_from = date.replace(month=1, day=1)
+            date_to = date.replace(month=12, day=31)
         date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '>=', date), ('date_from', '<=', date_to)], order='date_from desc', limit=1)
         if date_range:
             date_to = date_range.date_from + timedelta(days=-1)

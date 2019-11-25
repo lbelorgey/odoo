@@ -212,11 +212,13 @@ class IrSequence(models.Model):
             return (s % d) if s else ''
 
         def _interpolation_dict():
-            now = range_date = effective_date = datetime.now(pytz.timezone(self._context.get('tz') or 'UTC'))
+            now = range_date_from = range_date_to = effective_date = datetime.now(pytz.timezone(self._context.get('tz') or 'UTC'))
             if date or self._context.get('ir_sequence_date'):
                 effective_date = fields.Datetime.from_string(date or self._context.get('ir_sequence_date'))
-            if date_range or self._context.get('ir_sequence_date_range'):
-                range_date = fields.Datetime.from_string(date_range or self._context.get('ir_sequence_date_range'))
+            if date_range or self._context.get('ir_sequence_date_range_from'):
+                range_date_from = fields.Datetime.from_string(date_range or self._context.get('ir_sequence_date_range_from'))
+            if date_range or self._context.get('ir_sequence_date_range_to'):
+                range_date_to = fields.Datetime.from_string(date_range or self._context.get('ir_sequence_date_range_to'))
 
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
@@ -225,7 +227,8 @@ class IrSequence(models.Model):
             res = {}
             for key, format in sequences.items():
                 res[key] = effective_date.strftime(format)
-                res['range_' + key] = range_date.strftime(format)
+                res['range_from_' + key] = range_date_from.strftime(format)
+                res['range_to_' + key] = range_date_to.strftime(format)
                 res['current_' + key] = now.strftime(format)
 
             return res
@@ -291,7 +294,7 @@ class IrSequence(models.Model):
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)
-        return seq_date.with_context(ir_sequence_date_range=seq_date.date_from)._next()
+        return seq_date.with_context(ir_sequence_date_range_from=seq_date.date_from, ir_sequence_date_range_to=seq_date.date_to)._next()
 
     def next_by_id(self, sequence_date=None):
         """ Draw an interpolated string using the specified sequence."""

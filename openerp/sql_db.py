@@ -51,7 +51,7 @@ from datetime import datetime as mdt
 from datetime import timedelta
 import threading
 from inspect import currentframe
-
+import time
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
@@ -212,9 +212,7 @@ class Cursor(object):
             _logger.info("SQL query parameters should be a tuple, list or dict; got %r", params)
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
-        if self.sql_log:
-            now = mdt.now()
-
+        now = time.time()
         try:
             params = params or None
             res = self._obj.execute(query, params)
@@ -229,11 +227,14 @@ class Cursor(object):
 
         # simple query count is always computed
         self.sql_log_count += 1
+        delay = (time.time() - now)
+        if hasattr(threading.current_thread(), 'query_count'):
+            threading.current_thread().query_count += 1
+            threading.current_thread().query_time += delay
 
         # advanced stats only if sql_log is enabled
         if self.sql_log:
-            delay = mdt.now() - now
-            delay = delay.seconds * 1E6 + delay.microseconds
+            delay *= 1E6
 
             _logger.debug("query: %s", self._obj.query)
             res_from = re_from.match(query.lower())

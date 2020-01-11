@@ -844,7 +844,7 @@ class account_payment(models.Model):
         """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed)
         """
         return {
-            'partner_id': self.payment_type in ('inbound', 'outbound') and self.env['res.partner']._find_accounting_partner(self.partner_id).id or False,
+            'partner_id': self.payment_type in ('inbound', 'outbound') and self.env['res.partner']._find_accounting_partner(self.partner_id).id or self.payment_type == 'transfer' and self.company_id.partner_id.id or False,
             'invoice_id': invoice_id and invoice_id.id or False,
             'move_id': move_id,
             'debit': debit,
@@ -869,12 +869,6 @@ class account_payment(models.Model):
                     name += _("Vendor Credit Note")
                 elif self.payment_type == 'outbound':
                     name += _("Vendor Payment")
-            if invoice:
-                name += ': '
-                for inv in invoice:
-                    if inv.move_id:
-                        name += inv.number + ', '
-                name = name[:len(name)-2]
         return {
             'name': name,
             'account_id': self.destination_account_id.id,

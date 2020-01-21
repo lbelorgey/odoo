@@ -84,8 +84,11 @@ class ProcurementOrder(models.Model):
                 # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
                 production = ProductionSudo.create(procurement._prepare_mo_vals(bom))
                 res[procurement.id] = production.id
-                procurement.message_post(body=_("Manufacturing Order <em>%s</em> created.") % (production.name))
+                body=_("Manufacturing Order <em>%s</em> created.") % (production.name)
+		log = procurement.log or ''
+                procurement.write({'log': fields.Datetime.now() + ': ' + body + '\n' + log})
             else:
                 res[procurement.id] = False
-                procurement.message_post(body=_("No BoM exists for this product!"))
+		log = procurement.log or ''
+                procurement.write({'log': fields.Datetime.now() + ': ' + _("No BoM exists for this product!") + '\n' + log})
         return res

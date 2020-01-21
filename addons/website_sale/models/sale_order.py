@@ -231,7 +231,7 @@ class Website(models.Model):
                     if not show_visible or group_pricelists.selectable or group_pricelists.id in (current_pl, order_pl):
                         pricelists |= group_pricelists
 
-        partner = self.env.user.partner_id
+        partner = self.env["res.partner"].browse(self.env.user.partner_id.id)  # get the partner with correct env
         is_public = self.user_id.id == self.env.user.id
         if not is_public and (not pricelists or (partner_pl or partner.property_product_pricelist.id) != website_pl):
             if partner.property_product_pricelist.website_id:
@@ -264,7 +264,7 @@ class Website(models.Model):
                 # In the weird case we are coming from the backend (https://github.com/odoo/odoo/issues/20245)
                 website = len(self) == 1 and self or self.search([], limit=1)
         isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
-        partner = self.env.user.partner_id
+        partner = self.env["res.partner"].browse(self.env.user.partner_id.id)  # get the partner with correct env
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,

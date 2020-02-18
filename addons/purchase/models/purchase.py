@@ -741,7 +741,8 @@ class PurchaseOrderLine(models.Model):
             if line.order_id.state in ['purchase', 'done']:
                 raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
             for proc in line.procurement_ids:
-                proc.message_post(body=_('Purchase order line deleted.'))
+                log = proc.log or ''
+                proc.write({'log': fields.Datetime.now() + ': ' + _('Purchase order line deleted.') + '\n' + log})
             line.procurement_ids.filtered(lambda r: r.state != 'cancel').write({'state': 'exception'})
         return super(PurchaseOrderLine, self).unlink()
 
@@ -942,8 +943,12 @@ class ProcurementOrder(models.Model):
             elif move_all_done_or_cancel and not move_all_cancel:
                 return True
             else:
-                self.message_post(body=_('All stock moves have been cancelled for this procurement.'))
-                self.write({'state': 'cancel'})
+                log = self.log or ''
+                self.write({
+                    'log': fields.Datetime.now() + ': ' +
+                           _('All stock moves have been cancelled for this '
+                             'procurement.') + '\n' + log,
+                    'state': 'cancel'})
                 return False
         return super(ProcurementOrder, self)._check()
 
@@ -1061,7 +1066,8 @@ class ProcurementOrder(models.Model):
             suppliers = procurement.product_id.seller_ids\
                 .filtered(lambda r: (not r.company_id or r.company_id == procurement.company_id) and (not r.product_id or r.product_id == procurement.product_id))
             if not suppliers:
-                procurement.message_post(body=_('No vendor associated to product %s. Please set one to fix this procurement.') % (procurement.product_id.name))
+                log = procurement.log or ''
+                procurement.write({'log': fields.Datetime.now() + ': ' + _('No vendor associated to product %s. Please set one to fix this procurement.') % (procurement.product_id.name) + '\n' + log})
                 continue
             supplier = procurement._make_po_select_supplier(suppliers)
             partner = supplier.name

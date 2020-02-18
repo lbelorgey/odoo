@@ -115,7 +115,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
-        self.customer_lead = self.product_id.sale_delay
+        self.customer_lead = self.product_id.product_tmpl_id.sale_delay
 
     @api.onchange('product_packaging')
     def _onchange_product_packaging(self):

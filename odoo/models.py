@@ -2958,7 +2958,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # store an access error exception in existing records
                 exc = AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, 'read')
-                    + ' - ({} {}, {} {})'.format(_('Records:'), forbidden.ids, _('User:'), self._uid)
+                    + ' - ({} {}, {} {})'.format(_('Records:'), forbidden.ids[:6], _('User:'), self._uid)
                 )
                 self.env.cache.set_failed(forbidden, self._fields.values(), exc)
 

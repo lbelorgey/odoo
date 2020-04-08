@@ -121,7 +121,7 @@ class ColoredPerfFilter(PerfFilter):
                 return COLOR_PATTERN % (30 + YELLOW, 40 + DEFAULT, format % time)
             return format % time
         return (
-            colorize_time(query_time, "%.3f", 100, 1000),
+            colorize_time(query_count, "%.3f", 100, 1000),
             colorize_time(query_time, "%.3f", 0.1, 3),
             colorize_time(remaining_time, "%.3f", 1, 5)
             )
@@ -145,12 +145,14 @@ def init_logger():
         return
     _logger_init = True
 
-    old_factory = logging.getLogRecordFactory()
-    def record_factory(*args, **kwargs):
-        record = old_factory(*args, **kwargs)
+    old_make_record = logging.Logger.makeRecord
+
+    def makeRecord(*args, **kwargs):
+        record = old_make_record(*args, **kwargs)
         record.perf_info = ""
         return record
-    logging.setLogRecordFactory(record_factory)
+
+    logging.Logger.makeRecord = makeRecord
 
     logging.addLevelName(25, "INFO")
     logging.captureWarnings(True)

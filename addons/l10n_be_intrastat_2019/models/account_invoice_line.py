@@ -3,7 +3,15 @@
 
 from odoo import api, fields, models
 
+
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    intrastat_product_origin_country_id = fields.Many2one('res.country', string='Origin Country of Product')
+    intrastat_product_origin_country_id = fields.Many2one(
+        'res.country', string='Origin Country of Product')
+
+    @api.onchange('product_id')
+    def _onchange_product_intrastat(self):
+        if self.product_id:
+            self.intrastat_product_origin_country_id =\
+                self.product_id.intrastat_product_origin_country_id

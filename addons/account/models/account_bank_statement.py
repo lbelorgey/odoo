@@ -602,7 +602,7 @@ class AccountBankStatementLine(models.Model):
         from_clause = "FROM account_move_line aml JOIN account_account acc ON acc.id = aml.account_id "
         account_clause = ''
         if self.journal_id.default_credit_account_id and self.journal_id.default_debit_account_id:
-            account_clause = "(aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s AND aml.payment_id IS NOT NULL) OR"
+            account_clause = "(aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s) OR"
         where_clause = """WHERE aml.company_id = %(company_id)s
                           AND (
                                     """ + account_clause + """

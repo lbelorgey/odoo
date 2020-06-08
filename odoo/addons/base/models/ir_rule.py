@@ -133,6 +133,27 @@ class IrRule(models.Model):
         return self.browse(row[0] for row in self._cr.fetchall())
 
     @api.model
+    @tools.conditional('xml' not in config['dev_mode'],
+        tools.ormcache('self.env.uid', 'self.env.su',
+                       'tuple(self._compute_domain_context_values())'),
+    )
+    def _domain_force_get(self):
+        # browse user and rules as SUPERUSER_ID to avoid access errors!
+        eval_context = self._eval_context()
+        user_groups = self.env.user.groups_id
+        global_domains = []  # list of domains
+        group_domains = []  # list of domains
+        for rule in self.sudo():
+            # evaluate the domain for the current user
+            dom = safe_eval(rule.domain_force,
+                            eval_context) if rule.domain_force else []
+            dom = expression.normalize_domain(dom)
+            if not rule.groups:
+                global_domains.append(dom)
+            elif rule.groups & user_groups:
+                group_domains.append(dom)
+   
+    @api.model
     @tools.conditional(
         'xml' not in config['dev_mode'],
         tools.ormcache('self.env.uid', 'self.env.su', 'model_name', 'mode',

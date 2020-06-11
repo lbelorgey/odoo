@@ -515,8 +515,8 @@ class AccountBankStatementLine(models.Model):
                     'state': 'reconciled',
                     'currency_id': currency.id,
                     'amount': abs(total),
-                    'communication': st_line._get_communication(payment_methods[0] if payment_methods else False),
-                    'name': st_line.statement_id.name or _("Bank Statement %s") % st_line.date,
+                    'communication': st_line.ref,
+                    'name': st_line._get_communication(payment_methods[0] if payment_methods else False),
                 })
 
                 # Create move and move line vals
@@ -609,6 +609,8 @@ class AccountBankStatementLine(models.Model):
                 aml_dict['tax_ids'] = [(4, id, None) for id in aml_dict['tax_ids']]
 
             user_type_id = self.env['account.account'].browse(aml_dict.get('account_id')).user_type_id
+            if not user_type_id:
+                user_type_id = aml_dict.get('move_line').account_id.user_type_id
             if user_type_id in [payable_account_type, receivable_account_type] and user_type_id not in account_types:
                 account_types |= user_type_id
         if any(line.journal_entry_ids for line in self):
@@ -648,19 +650,22 @@ class AccountBankStatementLine(models.Model):
             partner_id = self.partner_id or (aml_dict.get('move_line') and aml_dict['move_line'].partner_id) or self.env['res.partner']
             if abs(total)>0.00001:
                 partner_type = False
-                if partner_id and len(account_types) == 1:
-                    partner_type = 'customer' if account_types == receivable_account_type else 'supplier'
-                if partner_id and not partner_type:
-                    if total < 0:
-                        partner_type = 'supplier'
-                    else:
+                if partner_id and len(account_types) == 1 and account_types in [receivable_account_type, payable_account_type]:
+                    if (partner_id.customer and not partner_id.supplier) or (not partner_id.customer and partner_id.supplier):
+                        partner_type = 'customer' if partner_id.customer else 'supplier'
+                    elif account_types == receivable_account_type:
                         partner_type = 'customer'
+                    elif account_types == payable_account_type:
+                        partner_type = 'supplier'
+                if partner_id and not partner_type:
+                    partner_type = 'other'
 
+                payment_type = total >0 and 'inbound' or 'outbound'
                 payment_methods = (total>0) and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
                 currency = self.journal_id.currency_id or self.company_id.currency_id
                 payment = self.env['account.payment'].create({
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
-                    'payment_type': total >0 and 'inbound' or 'outbound',
+                    'payment_type': payment_type,
                     'partner_id': partner_id.id,
                     'partner_type': partner_type,
                     'journal_id': self.statement_id.journal_id.id,
@@ -668,14 +673,30 @@ class AccountBankStatementLine(models.Model):
                     'state': 'reconciled',
                     'currency_id': currency.id,
                     'amount': abs(total),
-                    'communication': self._get_communication(payment_methods[0] if payment_methods else False),
-                    'name': self.statement_id.name or _("Bank Statement %s") %  self.date,
+                    'communication': self.ref,
+                    'name': self._get_communication(payment_methods[0] if payment_methods else False),
                 })
 
             # Complete dicts to create both counterpart move lines and write-offs
             to_create = (counterpart_aml_dicts + new_aml_dicts)
             date = self.date or fields.Date.today()
             for aml_dict in to_create:
+                name = False
+                if partner_type == 'customer':
+                    if payment_type == 'inbound':
+                        name = _("Payment")
+                    elif payment_type == 'outbound':
+                        name = _("Repayment")
+                elif partner_type == 'supplier':
+                    if payment_type == 'inbound':
+                        name = _("Repayment")
+                    elif payment_type == 'outbound':
+                        name = _("Payment")
+                elif partner_type == 'other':
+                    name = aml_dict['name']
+
+                if name:
+                    aml_dict['name'] = name
                 aml_dict['move_id'] = move.id
                 aml_dict['partner_id'] = self.partner_id.id
                 aml_dict['statement_line_id'] = self.id

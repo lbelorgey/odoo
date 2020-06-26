@@ -660,9 +660,7 @@ class IrModelFields(models.Model):
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
 
-    @api.model
-    def _instanciate(self, field_data, partial):
-        """ Return a field instance corresponding to parameters ``field_data``. """
+    def _instanciate_attrs(self, field_data, partial):
         attrs = {
             'manual': True,
             'string': field_data['field_description'],
@@ -710,8 +708,14 @@ class IrModelFields(models.Model):
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
         if field_data.get('sparse'):
             attrs['sparse'] = field_data['sparse']
+        return attrs
 
-        return fields.Field.by_type[field_data['ttype']](**attrs)
+    @api.model
+    def _instanciate(self, field_data, partial):
+        """ Return a field instance corresponding to parameters ``field_data``. """
+        attrs = self._instanciate_attrs(field_data, partial)
+        if attrs:
+            return fields.Field.by_type[field_data['ttype']](**attrs)
 
 
 class IrModelConstraint(models.Model):

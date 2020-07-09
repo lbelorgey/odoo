@@ -2498,6 +2498,7 @@ class Id(Field):
         'string': 'ID',
         'store': True,
         'readonly': True,
+        'prefetch': False,
     }
 
     def __get__(self, record, owner):

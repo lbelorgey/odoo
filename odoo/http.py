@@ -283,6 +283,9 @@ class WebRequest(object):
                         self.registry.signal_changes()
                 elif self.registry:
                     self.registry.reset_changes()
+                    # call rollback to ensure that registered event handlers
+                    # on rollback are called
+                    self._cr.rollback()
             finally:
                 self._cr.close()
         # just to be sure no one tries to re-use the request

@@ -120,7 +120,7 @@ class MrpProductProduce(models.TransientModel):
                                     'group_id': order.procurement_group_id.id,
                                     'origin': order.name,
                                     'state': 'confirmed'})
-                pl.move_id._generate_consumed_move_line(pl.qty_done, self.lot_id, lot=pl.lot_id)
+                pl.move_id._generate_consumed_move_line(pl.qty_done, self.lot_id, lot=pl.lot_id, owner=pl.owner_id)
         return True
 
     @api.onchange('product_qty')
@@ -140,6 +140,7 @@ class MrpProductProduce(models.TransientModel):
                     'qty_to_consume': to_consume_in_line,
                     'qty_done': to_consume_in_line,
                     'lot_id': move_line.lot_id.id,
+                    'owner_id': move_line.owner_id.id,
                     'product_uom_id': move.product_uom.id,
                     'product_id': move.product_id.id,
                     'qty_reserved': min(to_consume_in_line, move_line.product_uom_qty),
@@ -175,6 +176,7 @@ class MrpProductProduceLine(models.TransientModel):
     product_id = fields.Many2one('product.product', 'Product')
     product_tracking = fields.Selection(related="product_id.tracking")
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
+    owner_id = fields.Many2one('res.partner', 'Owner')
     qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
     qty_done = fields.Float('Consumed', digits=dp.get_precision('Product Unit of Measure'))

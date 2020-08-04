@@ -220,7 +220,7 @@ class StockMove(models.Model):
             return self.copy(default=self._prepare_phantom_move_values(bom_line, quantity))
         return self.env['stock.move']
 
-    def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):
+    def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False, owner=False):
         if lot:
             move_lines = self.move_line_ids.filtered(lambda ml: ml.lot_id == lot and not ml.lot_produced_id)
         else:
@@ -254,10 +254,10 @@ class StockMove(models.Model):
             # correct if the quantity available is spread in several sub-locations, but at least
             # we should be closer to the reality. Anyway, no reservation is made, so it is still
             # possible to change it afterwards.
-            quants = self.env['stock.quant']._gather(self.product_id, self.location_id, lot_id=lot, strict=False)
+            quants = self.env['stock.quant']._gather(self.product_id, self.location_id, lot_id=lot, owner_id=owner, strict=False)
             available_quantity = self.product_id.uom_id._compute_quantity(
                 self.env['stock.quant']._get_available_quantity(
-                    self.product_id, self.location_id, lot_id=lot, strict=False
+                    self.product_id, self.location_id, lot_id=lot, owner_id=owner, strict=False
                 ), self.product_uom
             )
             location_id = False
@@ -277,6 +277,8 @@ class StockMove(models.Model):
             }
             if lot:
                 vals.update({'lot_id': lot.id})
+            if owner:
+                vals.update({'owner_id': owner.id})
             self.env['stock.move.line'].create(vals)
 
     def _get_upstream_documents_and_responsibles(self, visited):

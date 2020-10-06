@@ -15,7 +15,7 @@ from lxml import etree
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv.orm import browse_record
 
 # Global variables used for the warning fields declared on the res.partner
@@ -514,11 +514,37 @@ class Partner(models.Model, FormatAddress):
             result = super(Partner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
         result = result and super(Partner, self).write(vals)
+        partner_related_user_check_needed = self._get_partner_related_user_check_needed(vals)
         for partner in self:
-            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
-                self.env['res.users'].check_access_rights('write')
+            if partner_related_user_check_needed:
+                partner._check_related_users_write_access(vals)
             partner._fields_sync(vals)
         return result
+
+    @api.model
+    def _get_partner_related_user_check_needed(self, vals):
+        fields_to_check = [
+            'name',
+            'email'
+        ]
+        return any([
+            field_name in vals
+            for field_name in fields_to_check
+        ])
+
+    @api.multi
+    def _check_related_users_write_access(self, vals):
+        self.ensure_one()
+        if any(u.has_group('base.group_user') for u in self.user_ids if u != self.env.user):
+            try:
+                self.env['res.users'].check_access_rights('write')
+            except AccessError:
+                raise UserError(
+                    _("You are not allowed to edit the name/email of a "
+                      "partner who is linked to a user. Please ask a user "
+                      "with the proper access to do it. (Partner: %s)") % (
+                        self.name,
+                    ))
 
     @api.model
     def create(self, vals):

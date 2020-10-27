@@ -70,10 +70,10 @@ class PaymentTransaction(models.Model):
                         acquirer_name = tx.acquirer_id.provider or 'unknown'
                     if tx.state == 'authorized' and tx.acquirer_id.auto_confirm == 'authorize':
                         _logger.info('<%s> transaction authorized, auto-confirming order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
-                        tx.sale_order_id.with_context(send_email=True).action_confirm()
+                        tx.sale_order_id.with_context(send_email=False).action_confirm()
                     if tx.state == 'done' and tx.acquirer_id.auto_confirm in ['confirm_so', 'generate_and_pay_invoice']:
                         _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
-                        tx.sale_order_id.with_context(send_email=True).action_confirm()
+                        tx.sale_order_id.with_context(send_email=False).action_confirm()
 
                         if tx.acquirer_id.auto_confirm == 'generate_and_pay_invoice':
                             self._generate_and_pay_invoice(tx, acquirer_name)

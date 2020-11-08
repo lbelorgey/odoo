@@ -28,6 +28,7 @@ import fnmatch
 import functools
 import itertools
 import io
+import json
 import logging
 import operator
 import pytz
@@ -2458,8 +2459,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if necessary:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
+            column_format = field.column_format
+            if field.translation_storage == 'json':
+                value = json.dumps({self.env.lang or 'en_US': value})
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
-                self._table, column_name, field.column_format, column_name)
+                self._table, column_name, column_format, column_name)
             self._cr.execute(query, (value,))
 
     @ormcache()
@@ -3656,7 +3660,13 @@ Fields:
                 _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
             assert field.column_type
-            columns.append((name, field.column_format, val))
+            if field.translation_storage == 'json':
+                val = AsIs(val)
+                columns.append((name,
+                                "jsonb_set(%s, '{\"%s\"}', '\"%s\"')" % (name, self.env.lang or 'en_US', field.column_format),
+                                val))
+            else:
+                columns.append((name, field.column_format, val))
 
         if self._log_access:
             if not vals.get('write_uid'):
@@ -3858,9 +3868,13 @@ Fields:
 
                 if field.column_type:
                     col_val = field.convert_to_column(val, self, stored)
-                    columns.append((name, field.column_format, col_val))
-                    if field.translate is True:
-                        translated_fields.add(field)
+                    if field.translation_storage == 'json':
+                        col_val = json.dumps({self.env.lang or 'en_US': col_val})
+                        columns.append((name, field.column_format, col_val))
+                    else:
+                        columns.append((name, field.column_format, col_val))
+                        if field.translate is True:
+                            translated_fields.add(field)
                 else:
                     other_fields.add(field)
 
@@ -4252,6 +4266,10 @@ Fields:
         :return: the qualified field name (or expression) to use for ``field``
         """
         if self.env.lang:
+            if self._fields[field].translation_storage == 'json':
+                if self.env.lang != 'en_US':
+                    return 'COALESCE("%s"."%s"->>\'%s\', "%s"."%s"->>\'en_US\')' % (table_alias, field, self.env.lang, table_alias, field)
+                return '"%s"."%s"->>\'en_US\''% (table_alias, field)
             alias, alias_statement = query.add_join(
                 (table_alias, 'ir_translation', 'id', 'res_id', field),
                 implicit=False,

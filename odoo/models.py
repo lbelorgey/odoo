@@ -4273,7 +4273,7 @@ Fields:
                 for code, _ in installed:
                     if code == locale:
                         continue
-                    fields_path.append['"%s"."%s"->>\'%s\'' % (table_alias, field, code)]
+                    fields_path.append('"%s"."%s"->>\'%s\'' % (table_alias, field, code))
                 if len(fields_path) > 1:
                     return 'COALESCE(%s)' % " ,".join(fields_path)
                 return fields_path[0]

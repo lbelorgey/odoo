@@ -2461,7 +2461,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                           self._table, column_name, value)
             column_format = field.column_format
             if field.translation_storage == 'json':
-                value = json.dumps({self.env.lang or 'en_US': value})
+                value = json.dumps({get_lang(self.env).code: value})
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
                 self._table, column_name, column_format, column_name)
             self._cr.execute(query, (value,))
@@ -3663,7 +3663,7 @@ Fields:
             if field.translation_storage == 'json':
                 val = AsIs(val)
                 columns.append((name,
-                                "jsonb_set(%s, '{\"%s\"}', '\"%s\"')" % (name, self.env.lang or 'en_US', field.column_format),
+                                "jsonb_set(%s, '{\"%s\"}', '\"%s\"')" % (name, get_lang(self.env).code, field.column_format),
                                 val))
             else:
                 columns.append((name, field.column_format, val))
@@ -3869,7 +3869,7 @@ Fields:
                 if field.column_type:
                     col_val = field.convert_to_column(val, self, stored)
                     if field.translation_storage == 'json':
-                        col_val = json.dumps({self.env.lang or 'en_US': col_val})
+                        col_val = json.dumps({get_lang(self.env).code: col_val})
                         columns.append((name, field.column_format, col_val))
                     else:
                         columns.append((name, field.column_format, col_val))
@@ -4267,9 +4267,16 @@ Fields:
         """
         if self.env.lang:
             if self._fields[field].translation_storage == 'json':
-                if self.env.lang != 'en_US':
-                    return 'COALESCE("%s"."%s"->>\'%s\', "%s"."%s"->>\'en_US\')' % (table_alias, field, self.env.lang, table_alias, field)
-                return '"%s"."%s"->>\'en_US\''% (table_alias, field)
+                locale = get_lang(self.env).code
+                installed = self.env["res.lang"].get_installed()
+                fields_path = ['"%s"."%s"->>\'%s\'' % (table_alias, field, locale)]
+                for code, _ in installed:
+                    if code == locale:
+                        continue
+                    fields_path.append['"%s"."%s"->>\'%s\'' % (table_alias, field, code)]
+                if len(fields_path) > 1:
+                    return 'COALESCE(%s)' % " ,".join(fields_path)
+                return fields_path[0]
             alias, alias_statement = query.add_join(
                 (table_alias, 'ir_translation', 'id', 'res_id', field),
                 implicit=False,

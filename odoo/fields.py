@@ -1420,7 +1420,6 @@ class _String(Field):
                       )
             )
 
-
     @property
     def translation_column(self):
         return "%s_translations" % self.name

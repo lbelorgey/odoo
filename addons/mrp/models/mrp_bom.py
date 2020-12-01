@@ -69,16 +69,6 @@ class MrpBom(models.Model):
             for line in self.bom_line_ids:
                 line.attribute_value_ids = False
 
-    @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
-    def _check_product_recursion(self):
-        for bom in self:
-            if bom.product_id:
-                if bom.bom_line_ids.filtered(lambda x: x.product_id == bom.product_id):
-                    raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
-            else:
-                if bom.bom_line_ids.filtered(lambda x: x.product_id.product_tmpl_id == bom.product_tmpl_id):
-                    raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
-
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
         res = {}

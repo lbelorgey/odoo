@@ -129,16 +129,11 @@ exports.PosModel = Backbone.Model.extend({
                         done.resolve();
                 },
                 function(statusText, url){
-                        var show_loading_error = (self.gui.current_screen === null);
-                        done.resolve();
-                        if (show_loading_error && statusText == 'error' && window.location.protocol == 'https:') {
-                            self.gui.show_popup('alert', {
-                                title: _t('HTTPS connection to IoT Box failed'),
-                                body: _.str.sprintf(
-                                  _t('Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.'),
-                                  url
-                                ),
-                            });
+                        if (statusText == 'error' && window.location.protocol == 'https:') {
+                            var error = {message: 'TLSError', url: url};
+                            self.chrome.loading_error(error);
+                        } else {
+                            done.resolve();
                         }
                 });
         return done;

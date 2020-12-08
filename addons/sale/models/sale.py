@@ -863,7 +863,7 @@ class SaleOrderLine(models.Model):
         # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
-        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id)
+        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id, lang='')
         final_price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         base_price, currency_id = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         if currency_id != self.order_id.pricelist_id.currency_id.id:
@@ -967,14 +967,14 @@ class SaleOrderLine(models.Model):
             pricelist_item = PricelistItem.browse(rule_id)
             if pricelist_item.pricelist_id.discount_policy == 'without_discount':
                 while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
-                    price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id).get_product_price_rule(product, qty, self.order_id.partner_id)
+                    price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id, lang='').get_product_price_rule(product, qty, self.order_id.partner_id)
                     pricelist_item = PricelistItem.browse(rule_id)
 
             if pricelist_item.base == 'standard_price':
                 field_name = 'standard_price'
             if pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
                 field_name = 'price'
-                product = product.with_context(pricelist=pricelist_item.base_pricelist_id.id)
+                product = product.with_context(pricelist=pricelist_item.base_pricelist_id.id, lang='')
                 product_currency = pricelist_item.base_pricelist_id.currency_id
             currency_id = pricelist_item.pricelist_id.currency_id
 
@@ -1022,7 +1022,7 @@ class SaleOrderLine(models.Model):
             fiscal_position=self.env.context.get('fiscal_position')
         )
 
-        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id)
+        product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id, lang='')
 
         price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         new_list_price, currency_id = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)

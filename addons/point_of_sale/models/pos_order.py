@@ -172,6 +172,49 @@ class PosOrder(models.Model):
             'user_id': self.user_id.id,
         }
 
+    @api.model
+    def _get_account_move_line_group_data_type_key(self, data_type, values):
+        """
+        Return a tuple which will be used as a key for grouping account
+        move lines in _create_account_move_line method.
+        :param data_type: 'product', 'tax', ....
+        :param values: account move line values
+        :return: tuple() representing the data_type key
+        """
+        key = False
+        if data_type == 'product':
+            key = ('product', values['partner_id'],
+            (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']),
+            values['analytic_account_id'], values['debit'] > 0)
+        elif data_type == 'tax':
+            key = ('tax', values['partner_id'], values['tax_line_id'],
+                   values['debit'] > 0)
+        elif data_type == 'counter_part':
+            key = ('counter_part', values['partner_id'], values['account_id'],
+                   values['debit'] > 0)
+        return key
+
+    def _prepare_product_account_move_line(self, line, partner_id, account_id,
+                                           taxe_ids):
+        name = line.product_id.name
+        if line.notice:
+            # add discount reason in move
+            name = name + ' (' + line.notice + ')'
+
+        amount = line.price_subtotal
+        values = {
+            'name': name,
+            'quantity': line.qty,
+            'product_id': line.product_id.id,
+            'account_id': account_id,
+            'analytic_account_id': self._prepare_analytic_account(line),
+            'credit': ((amount > 0) and amount) or 0.0,
+            'debit': ((amount < 0) and -amount) or 0.0,
+            'tax_ids': [(6, 0, taxe_ids)],
+            'partner_id': partner_id
+        }
+        return values
+
     def _action_create_invoice_line(self, line=False, invoice_id=False):
         InvoiceLine = self.env['account.invoice.line']
         inv_name = line.product_id.name_get()[0][1]
@@ -274,13 +317,9 @@ class PosOrder(models.Model):
                     'move_id': move.id,
                 })
 
-                if data_type == 'product':
-                    key = ('product', values['partner_id'], (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']), values['analytic_account_id'], values['debit'] > 0)
-                elif data_type == 'tax':
-                    key = ('tax', values['partner_id'], values['tax_line_id'], values['debit'] > 0)
-                elif data_type == 'counter_part':
-                    key = ('counter_part', values['partner_id'], values['account_id'], values['debit'] > 0)
-                else:
+                key = self._get_account_move_line_group_data_type_key(
+                    data_type, values)
+                if not key:
                     return
 
                 grouped_data.setdefault(key, [])
@@ -293,6 +332,7 @@ class PosOrder(models.Model):
                         current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
                         current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
                         current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
+                        current_value['pos_order_ids'] = current_value.get('pos_order_ids', []) + values.get('pos_order_ids', [])
                 else:
                     grouped_data[key].append(values)
 
@@ -305,8 +345,6 @@ class PosOrder(models.Model):
             # Create an move for each order line
             cur = order.pricelist_id.currency_id
             for line in order.lines:
-                amount = line.price_subtotal
-
                 # Search for the income account
                 if line.product_id.property_account_income_id.id:
                     income_account = line.product_id.property_account_income_id.id
@@ -317,26 +355,13 @@ class PosOrder(models.Model):
                                       'account for this product: "%s" (id:%d).')
                                     % (line.product_id.name, line.product_id.id))
 
-                name = line.product_id.name
-                if line.notice:
-                    # add discount reason in move
-                    name = name + ' (' + line.notice + ')'
-
                 # Create a move for the line for the order line
-                # Just like for invoices, a group of taxes must be present on this base line
+	        # Just like for invoices, a group of taxes must be present on this base line
                 # As well as its children
                 base_line_tax_ids = _flatten_tax_and_children(line.tax_ids_after_fiscal_position).filtered(lambda tax: tax.type_tax_use in ['sale', 'none'])
-                insert_data('product', {
-                    'name': name,
-                    'quantity': line.qty,
-                    'product_id': line.product_id.id,
-                    'account_id': income_account,
-                    'analytic_account_id': self._prepare_analytic_account(line),
-                    'credit': ((amount > 0) and amount) or 0.0,
-                    'debit': ((amount < 0) and -amount) or 0.0,
-                    'tax_ids': [(6, 0, base_line_tax_ids.ids)],
-                    'partner_id': partner_id
-                })
+                insert_data(
+                    'product', self._prepare_product_account_move_line(
+                        line, partner_id, income_account, base_line_tax_ids.ids))
 
                 # Create the tax lines
                 taxes = line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == current_company.id)
@@ -352,7 +377,8 @@ class PosOrder(models.Model):
                         'credit': ((tax['amount'] > 0) and tax['amount']) or 0.0,
                         'debit': ((tax['amount'] < 0) and -tax['amount']) or 0.0,
                         'tax_line_id': tax['id'],
-                        'partner_id': partner_id
+                        'partner_id': partner_id,
+                        'pos_order_ids': [(4, order.id, False)]
                     })
 
             # round tax lines per order
@@ -369,7 +395,8 @@ class PosOrder(models.Model):
                 'account_id': order_account,
                 'credit': ((order.amount_total < 0) and -order.amount_total) or 0.0,
                 'debit': ((order.amount_total > 0) and order.amount_total) or 0.0,
-                'partner_id': partner_id
+                'partner_id': partner_id,
+                'pos_order_ids': [(4, order.id, False)]
             })
 
             order.write({'state': 'done', 'account_move': move.id})
@@ -388,7 +415,7 @@ class PosOrder(models.Model):
 
     def _reconcile_payments(self):
         for order in self:
-            aml = order.statement_ids.mapped('journal_entry_ids').mapped('line_ids') | order.account_move.line_ids | order.invoice_id.move_id.line_ids
+            aml = order.statement_ids.mapped('journal_entry_ids').mapped('line_ids') | order.account_move_line_ids | order.invoice_id.move_id.line_ids
             aml = aml.filtered(lambda r: not r.reconciled and r.account_id.internal_type == 'receivable' and r.partner_id == order.partner_id.commercial_partner_id)
 
             try:
@@ -466,6 +493,7 @@ class PosOrder(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)]},
     )
+    account_move_line_ids = fields.Many2many('account.move.line', 'account_move_line_pos_order_rel', 'pos_order_id', 'account_move_line_id')
 
     @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
     def _compute_amount_all(self):

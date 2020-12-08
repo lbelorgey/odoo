@@ -140,8 +140,8 @@ class Product(models.Model):
             domain_move_in += [('date', '<=', to_date)]
             domain_move_out += [('date', '<=', to_date)]
 
-        Move = self.env['stock.move']
-        Quant = self.env['stock.quant']
+        Move = self.env['stock.move'].with_context(lang='')
+        Quant = self.env['stock.quant'].with_context(lang='')
         domain_move_in_todo = [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_move_in
         domain_move_out_todo = [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_move_out
         moves_in_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
@@ -155,7 +155,7 @@ class Product(models.Model):
             moves_out_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
 
         res = dict()
-        for product in self.with_context(prefetch_fields=False):
+        for product in self.with_context(prefetch_fields=False, lang=''):
             res[product.id] = {}
             if dates_in_the_past:
                 qty_available = quants_res.get(product.id, 0.0) - moves_in_res_past.get(product.id, 0.0) + moves_out_res_past.get(product.id, 0.0)

@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 
 class MrpUnbuild(models.Model):
@@ -197,7 +197,7 @@ class MrpUnbuild(models.Model):
             'name': self.name,
             'date': self.create_date,
             'product_id': raw_move.product_id.id,
-            'product_uom_qty': raw_move.product_uom_qty * factor,
+            'product_uom_qty': float_round(raw_move.product_uom_qty * factor, precision_rounding=raw_move.product_uom.rounding, rounding_method='HALF-UP'),
             'product_uom': raw_move.product_uom.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': self.location_dest_id.id,

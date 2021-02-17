@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -248,8 +248,11 @@ class Inventory(models.Model):
             if self.prefill_counted_quantity == 'zero':
                 product_data['product_qty'] = 0
             if product_data['product_id']:
-                product_data['product_uom_id'] = Product.browse(product_data['product_id']).uom_id.id
-                quant_products |= Product.browse(product_data['product_id'])
+                try:
+                    product_data['product_uom_id'] = Product.browse(product_data['product_id']).uom_id.id
+                    quant_products |= Product.browse(product_data['product_id'])
+                except AccessError:
+                    continue
             vals.append(product_data)
         return vals
 

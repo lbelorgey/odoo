@@ -9,5 +9,5 @@
     ],
     'installable': True,
     'application': False,
-    'auto_install': True,
+    'auto_install': False,  # mess up with install of l10nfrchorusfacturx
 }

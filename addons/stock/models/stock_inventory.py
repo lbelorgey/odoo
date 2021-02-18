@@ -213,7 +213,7 @@ class Inventory(models.Model):
             locations = self.env['stock.location'].search([('id', 'child_of', self.location_ids.ids)])
         else:
             locations = self.env['stock.location'].search([('company_id', '=', self.company_id.id), ('usage', 'in', ['internal', 'transit'])])
-        domain = ' sq.location_id in %s AND sq.quantity != 0 AND pp.active'
+        domain = ' sq.location_id in %s AND sq.quantity != 0 AND pp.active AND pt.type = \'product\''
         args = (tuple(locations.ids),)
 
         vals = []
@@ -235,6 +235,8 @@ class Inventory(models.Model):
             FROM stock_quant sq
             LEFT JOIN product_product pp
             ON pp.id = sq.product_id
+            JOIN product_template pt
+            ON pt.id = pp.product_tmpl_id
             WHERE %s
             GROUP BY sq.product_id, sq.location_id, sq.lot_id, sq.package_id, sq.owner_id """ % domain, args)
 

@@ -45,7 +45,8 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                 this.$nameCell = $cell;
                 $cell.attr('colspan', nbrColumns);
             } else if (this._isNodeProductField(node)) {
-                // do nothing
+                this.$nameCell = $cell;
+                $cell.attr('colspan', 2);
             } else if (node.attrs.name === 'sequence') {
                 // do nothing
             } else {

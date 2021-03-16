@@ -46,7 +46,10 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
                 $cell.attr('colspan', nbrColumns);
             } else if (this._isNodeProductField(node)) {
                 this.$nameCell = $cell;
-                $cell.attr('colspan', 2);
+                 if (node.attrs.context && node.attrs.context.includes('fromso')) {
+                 // tricky hack to ensure filed visibiliy on SO
+                     $cell.attr('colspan', 2);
+                }
             } else if (node.attrs.name === 'sequence') {
                 // do nothing
             } else {

@@ -406,7 +406,7 @@ class WebRequest(object):
         if max_ts:
             try:
                 if int(max_ts) < int(time.time()):
-                    _logger.warning("validate_csrf: max_ts (%s) < time.time() (%s)", (int(max_ts), int(time.time())))
+                    _logger.warning("validate_csrf: max_ts (%s) < time.time() (%s)", int(max_ts), int(time.time()))
                     return False
             except ValueError:
                 _logger.warning("validate_csrf: ValueError")

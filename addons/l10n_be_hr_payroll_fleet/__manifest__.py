@@ -13,5 +13,5 @@
         'views/hr_contract_views.xml',
         'security/security.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

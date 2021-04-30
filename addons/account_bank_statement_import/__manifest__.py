@@ -19,5 +19,5 @@ OFX and QIF imports are available in Enterprise version.""",
         'demo/partner_bank.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }

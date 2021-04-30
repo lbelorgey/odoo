@@ -18,5 +18,5 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'views/mass_mailing_view.xml',
         'views/res_config_settings_views.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

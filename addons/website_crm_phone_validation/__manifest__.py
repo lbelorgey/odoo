@@ -19,5 +19,5 @@ Validate contact (phone,mobile) numbers and normalize them on leads and contacts
         'website_crm',
         'website_form',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }

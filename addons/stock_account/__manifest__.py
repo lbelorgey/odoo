@@ -35,6 +35,6 @@ Dashboard / Reports for Warehouse Management includes:
     'test': [
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'post_init_hook': '_configure_journals',
 }

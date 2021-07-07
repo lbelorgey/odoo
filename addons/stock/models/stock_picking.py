@@ -1006,10 +1006,10 @@ class Picking(models.Model):
     @api.multi
     def put_in_pack(self):
         # TDE FIXME: reclean me
-        QuantPackage = self.env["stock.quant.package"]
         package = False
         for pick in self:
             operations = [x for x in pick.pack_operation_ids if x.qty_done > 0 and (not x.result_package_id)]
+            package = pick._get_put_in_pack_package(operations)
             pack_operation_ids = self.env['stock.pack.operation']
             for operation in operations:
                 # If we haven't done all qty in operation, we have to split into 2 operation
@@ -1030,11 +1030,15 @@ class Picking(models.Model):
                 pack_operation_ids |= op
             if operations:
                 pack_operation_ids.check_tracking()
-                package = QuantPackage.create({})
                 pack_operation_ids.write({'result_package_id': package.id})
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
+
+    def _get_put_in_pack_package(self, operations):
+        self.ensure_one()
+        QuantPackage = self.env["stock.quant.package"]
+        return QuantPackage.create({}) if operations else QuantPackage
 
     @api.multi
     def button_scrap(self):

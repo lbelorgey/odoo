@@ -780,6 +780,9 @@ class expression(object):
                         # rewrite condition to match records with/without lines
                         op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
                         subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (field.inverse_name, comodel._table, field.inverse_name)
+                        if comodel._active_name:
+                            active = field.context.get("active_test", True)
+                            subquery += ' AND "%s" = %s' % (comodel._active_name, active)
                         push(('id', op1, (subquery, [])), model, alias, internal=True)
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]

@@ -112,7 +112,7 @@ class AccountMove(models.Model):
             for line in move.invoice_line_ids:
 
                 # Filter out lines being not eligible for COGS.
-                if line.product_id.type != 'product' or line.product_id.valuation != 'real_time' or not line.sale_line_ids:
+                if not line._is_eligible_cogs_sale():
                     continue
 
                 # Retrieve accounts needed to generate the COGS.
@@ -240,3 +240,9 @@ class AccountMoveLine(models.Model):
         if not self.product_id:
             return self.price_unit
         return self.product_id._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+
+    def _is_eligible_cogs_sale(self):
+        self.ensure_one()
+        if self.product_id.type != 'product' or self.product_id.valuation != 'real_time' or not self.sale_line_ids:
+            return False
+        return True

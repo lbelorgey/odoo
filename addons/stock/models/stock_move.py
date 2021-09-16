@@ -832,11 +832,11 @@ class StockMove(models.Model):
             'picking_id': self.picking_id.id,
         }
         if quantity:
-            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            rounding = self.product_id.uom_id.rounding
             uom_quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom, rounding_method='HALF-UP')
-            uom_quantity = float_round(uom_quantity, precision_digits=rounding)
+            uom_quantity = float_round(uom_quantity, precision_rounding=rounding)
             uom_quantity_back_to_product_uom = self.product_uom._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
-            if float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
+            if float_compare(quantity, uom_quantity_back_to_product_uom, precision_rounding=rounding) == 0:
                 vals = dict(vals, product_uom_qty=uom_quantity)
             else:
                 vals = dict(vals, product_uom_qty=quantity, product_uom_id=self.product_id.uom_id.id)

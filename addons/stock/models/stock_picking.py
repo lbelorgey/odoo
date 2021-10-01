@@ -695,6 +695,10 @@ class Picking(models.Model):
         need_rereserve = False
         # sort the operations in order to give higher priority to those with a package, then a lot/serial number
         operations = self.pack_operation_ids
+        # PATCH LMI
+        # avoid to unlink operations of move already done....
+        operations = [op for op in operations if set(op.linked_move_operation_ids.mapped("move_id.state")) not in [{'done'}, {'cancel'}]]
+        # END PATCH
         operations = sorted(operations, key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.pack_lot_ids and -1 or 0))
         # delete existing operations to start again from scratch
         links = OperationLink.search([('operation_id', 'in', [x.id for x in operations])])

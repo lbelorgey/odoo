@@ -139,3 +139,9 @@ class AccountMoveLine(models.Model):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
         values['purchase_line_id'] = self.purchase_line_id.id
+
+    def _is_eligible_cogs(self):
+        result = super()._is_eligible_cogs()
+        if result and not self.purchase_line_id:
+            result = False
+        return result

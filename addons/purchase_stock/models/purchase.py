@@ -82,6 +82,24 @@ class PurchaseOrder(models.Model):
         self._create_picking()
         return result
 
+    def _run_buy_new_item(self, origins, values):
+        """
+        Update the existing PO after run_buy
+        :param origins: set
+        :param values: dict
+        :return: bool
+        """
+        if self.origin:
+            missing_origins = origins - set(self.origin.split(', '))
+            if missing_origins:
+                self.write({
+                    'origin': self.origin + ', ' + ', '.join(missing_origins)
+                })
+
+        else:
+            self.write({'origin': ', '.join(origins)})
+        return True
+
     def button_cancel(self):
         for order in self:
             for move in order.order_line.mapped('move_ids'):

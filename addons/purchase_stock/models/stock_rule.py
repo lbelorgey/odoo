@@ -76,24 +76,31 @@ class StockRule(models.Model):
             # Check if a PO exists for the current domain.
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
+            ###################################################################
+            # ACSONE - patch
+            # This patch is used to also update the date_order on existing
+            # purchase.order.
+            # When a PO is generated from a SO, the order_date (on the PO) is
+            # defined depending on the delivery date set on the SO line.
+            # Then if you create another SO with a delivery date sooner than
+            # the first one, the date_order on the PO is not updated at all.
+            # So this patch do it.
+            ###################################################################
+            # 1) Call the process to get values of the new PO (only to get the
+            # date_order).
+            vals = rules[0]._prepare_purchase_order(company_id, origins, [p.values for p in procurements])
             if not po:
                 # We need a rule to generate the PO. However the rule generated
                 # the same domain for PO and the _prepare_purchase_order method
                 # should only uses the common rules's fields.
-                vals = rules[0]._prepare_purchase_order(company_id, origins, [p.values for p in procurements])
+                # vals = rules[0]._prepare_purchase_order(company_id, origins, [p.values for p in procurements])
                 # The company_id is the same for all procurements since
                 # _make_po_get_domain add the company in the domain.
                 # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
                 # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
                 po = self.env['purchase.order'].with_context(force_company=company_id.id).with_user(SUPERUSER_ID).create(vals)
             else:
-                # If a purchase order is found, adapt its `origin` field.
-                if po.origin:
-                    missing_origins = origins - set(po.origin.split(', '))
-                    if missing_origins:
-                        po.write({'origin': po.origin + ', ' + ', '.join(missing_origins)})
-                else:
-                    po.write({'origin': ', '.join(origins)})
+                po._run_buy_new_item(origins, vals)
 
             procurements_to_merge = self._get_procurements_to_merge(procurements)
             procurements = self._merge_procurements(procurements_to_merge)

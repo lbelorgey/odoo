@@ -2479,8 +2479,6 @@ class AccountMove(models.Model):
         })
 
         for move in to_post:
-            move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
-
             # Compute 'ref' for 'out_invoice'.
             if move._auto_compute_invoice_reference():
                 to_write = {

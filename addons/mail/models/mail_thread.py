@@ -1841,10 +1841,6 @@ class MailThread(models.AbstractModel):
         if not subtype_id:
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
-        # automatically subscribe recipients if asked to
-        if self._context.get('mail_post_autofollow') and partner_ids:
-            self.message_subscribe(list(partner_ids))
-
         MailMessage_sudo = self.env['mail.message'].sudo()
         if self._mail_flat_thread and not parent_id:
             parent_message = MailMessage_sudo.search([('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)

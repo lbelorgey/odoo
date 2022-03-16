@@ -202,7 +202,42 @@ class IrModel(models.Model):
             _transient = bool(model_data['transient'])
             __doc__ = model_data['info']
 
+        table = CustomModel._name.replace('.', '_')
+        if model_data["state"] == "manual" and table_kind(self.env.cr, table) not in ('r', None):
+            # not a regular table, so disable schema upgrades
+            CustomModel._auto = False
+            self.env.cr.execute(
+                '''
+                SELECT a.attname
+                  FROM pg_attribute a
+                  JOIN pg_class t
+                    ON a.attrelid = t.oid
+                   AND t.relname = %s
+                 WHERE a.attnum > 0 -- skip system columns
+                ''',
+                [CustomModel._table]
+            )
+            columns = {colinfo[0] for colinfo in self.env.cr.fetchall()}
+            CustomModel._log_access = set(
+                models.LOG_ACCESS_COLUMNS) <= columns
+
         return CustomModel
+
+
+def table_kind(cr, tablename):
+    """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
+        ``'f'`` (foreign table), ``'t'`` (temporary table),
+        ``'m'`` (materialized view), or ``None``.
+    """
+    query = """
+            SELECT c.relkind
+              FROM pg_class c
+              JOIN pg_namespace n ON (n.oid = c.relnamespace)
+             WHERE c.relname = %s
+               AND n.nspname = current_schema
+        """
+    cr.execute(query, (tablename,))
+    return cr.fetchone()[0] if cr.rowcount else None
 
 
 class IrModelFields(models.Model):

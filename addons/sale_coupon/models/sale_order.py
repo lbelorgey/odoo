@@ -488,7 +488,7 @@ class SaleOrderLine(models.Model):
     is_reward_line = fields.Boolean('Is a program reward line')
 
     def unlink(self):
-        related_program_lines = self.env['sale.order.line']
+        related_program_lines = self.browse()
         # Reactivate coupons related to unlinked reward line
         for line in self.filtered(lambda line: line.is_reward_line):
             coupons_to_reactivate = line.order_id.applied_coupon_ids.filtered(

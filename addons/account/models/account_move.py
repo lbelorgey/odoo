@@ -3871,13 +3871,7 @@ class AccountMoveLine(models.Model):
             audit_str = ''
             for tag in record.tax_tag_ids:
 
-                if record.move_id.tax_cash_basis_rec_id:
-                    # Cash basis entries are always treated as misc operations, applying the tag sign directly to the balance
-                    type_multiplicator = 1
-                else:
-                    type_multiplicator = (record.journal_id.type == 'sale' and self._get_not_entry_condition(record) and -1 or 1) * (self._get_refund_tax_audit_condition(record) and -1 or 1)
-
-                tag_amount = type_multiplicator * (tag.tax_negate and -1 or 1) * record.balance
+                tag_amount = (record.account_internal_group == "income" and -1 or 1) * (tag.tax_negate and -1 or 1) * record.balance
 
                 if tag.tax_report_line_ids:
                     #Then, the tag comes from a report line, and hence has a + or - sign (also in its name)

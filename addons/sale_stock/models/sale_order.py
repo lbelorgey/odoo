@@ -476,6 +476,14 @@ class SaleOrderLine(models.Model):
             'sale_id': self.order_id.id,
             'partner_id': self.order_id.partner_shipping_id.id,
         }
+    
+    def _get_product_qty(self):
+        self.ensure_one()
+        return self.product_uom_qty
+
+    def _get_product_uom(self):
+        self.ensure_one()
+        return self.product_uom
 
     def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         """
@@ -486,10 +494,11 @@ class SaleOrderLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         procurements = []
         for line in self:
+            line_qty = line._get_product_qty()
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
             qty = line._get_qty_procurement(previous_product_uom_qty)
-            if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
+            if float_compare(qty, line_qty, precision_digits=precision) >= 0:
                 continue
 
             group_id = line._get_procurement_group()
@@ -508,9 +517,9 @@ class SaleOrderLine(models.Model):
                     group_id.write(updated_vals)
 
             values = line._prepare_procurement_values(group_id=group_id)
-            product_qty = line.product_uom_qty - qty
+            product_qty = line_qty - qty
 
-            line_uom = line.product_uom
+            line_uom = line._get_product_uom()
             quant_uom = line.product_id.uom_id
             product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
             procurements.append(self.env['procurement.group'].Procurement(

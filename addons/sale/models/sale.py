@@ -1742,6 +1742,7 @@ class SaleOrderLine(models.Model):
                 product_price_unit=self._get_display_price(product),
                 product_currency=self.order_id.currency_id
             )
+            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
         self.update(vals)
 
         title = False
@@ -1783,6 +1784,8 @@ class SaleOrderLine(models.Model):
                 product_price_unit=self._get_display_price(product),
                 product_currency=self.order_id.currency_id
             )
+            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(
+                self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
 
     def name_get(self):
         result = []

@@ -169,9 +169,9 @@ class HrExpense(models.Model):
         return total, total_currency, account_move_lines
 
     @api.multi
-    def _prepare_move_values(self):
+    def _prepare_move(self):
         """
-        This function prepares move values related to an expense
+        This function prepares move related to an expense
         """
         self.ensure_one()
         journal = self.sheet_id.bank_journal_id if self.payment_mode == 'company_account' else self.sheet_id.journal_id
@@ -194,7 +194,7 @@ class HrExpense(models.Model):
         '''
         for expense in self:
             # create the move that will contain the accounting entries
-            move = self.env['account.move'].create(expense._prepare_move_values())
+            move = self.env['account.move'].create(expense._prepare_move())
             company_currency = expense.company_id.currency_id
             diff_currency_p = expense.currency_id != company_currency
             #one account.move.line per expense (+taxes..)

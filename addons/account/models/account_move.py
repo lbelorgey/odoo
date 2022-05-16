@@ -3988,6 +3988,9 @@ class AccountMoveLine(models.Model):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_partner_id_ref_idx',))
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_company_id_parent_state_display_type',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX account_move_line_company_id_parent_state_display_type ON account_move_line (company_id,parent_state,display_type)')
 
     @api.model_create_multi
     def create(self, vals_list):

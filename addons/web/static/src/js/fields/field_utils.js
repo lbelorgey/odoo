@@ -23,6 +23,8 @@ var utils = require('web.utils');
 
 var _t = core._t;
 
+const NBSP = "\u00a0";
+
 //------------------------------------------------------------------------------
 // Formatting
 //------------------------------------------------------------------------------
@@ -323,6 +325,13 @@ function formatX2Many(value) {
  *        the number of digits that should be used, instead of the default
  *        digits precision in the field. Note: if the currency defines a
  *        precision, the currency's one is used.
+ * @param {boolean} [options.forceString=false]
+ *        if true, returns a string with regular whitespace. Otherwise it uses
+ *        non-breaking whitespace unicode character. The option is presented for
+ *        historical reason and will be removed in master. Previous
+ *        implementation used html entity `&nbsp;`, which doesn't work in html
+ *        attributes. With new implementation we can always use the unicode
+ *        character and the option is not needed anymore.
  * @returns {string}
  */
 function formatMonetary(value, field, options) {
@@ -352,10 +361,11 @@ function formatMonetary(value, field, options) {
     if (!currency || options.noSymbol) {
         return formatted_value;
     }
+    const ws = options.forceString ? ' ' : NBSP;
     if (currency.position === "after") {
-        return formatted_value += '&nbsp;' + currency.symbol;
+        return formatted_value + ws + currency.symbol;
     } else {
-        return currency.symbol + '&nbsp;' + formatted_value;
+        return currency.symbol + ws + formatted_value;
     }
 }
 /**
@@ -552,6 +562,9 @@ function parseFloat(value) {
  */
 function parseMonetary(value, field, options) {
     var values = value.split('&nbsp;');
+    if (values.length === 1) {
+        values = value.split(NBSP);
+    }
     if (values.length === 1) {
         return parseFloat(value);
     }

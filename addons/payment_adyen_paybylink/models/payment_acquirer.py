@@ -38,7 +38,7 @@ class PaymentAcquirer(models.Model):
     # We set a default for the now unused key fields rather than making them not required to avoid
     # the error log at DB init when the ORM tries to set the 'NOT NULL' constraint on those fields.
     adyen_skin_code = fields.Char(default="Do not use this field")
-    adyen_skin_hmac_key = fields.Char(default="Do not use this field")
+    adyen_skin_hmac_key = fields.Char(default="Do not use this field!")
 
     @api.model_create_multi
     def create(self, values_list):
@@ -48,13 +48,6 @@ class PaymentAcquirer(models.Model):
 
     def write(self, values):
         self._adyen_trim_api_urls(values)
-        # We set a default for the now unused key fields rather than making them not required to
-        # avoid the error log at DB init when the ORM tries to set the 'NOT NULL' constraint on
-        # those fields.
-        values.update(
-            adyen_skin_code="Do not use this field",
-            adyen_skin_hmac_key="Do not use this field",
-        )
         return super().write(values)
 
     @api.model

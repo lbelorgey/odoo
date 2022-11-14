@@ -614,6 +614,9 @@ class SaleOrder(models.Model):
 
     def _get_invoice_grouping_keys(self):
         return ['company_id', 'partner_id', 'currency_id']
+    
+    def _prefilter_invoiceable_lines(self):
+        return self.order_line
 
     def _get_invoiceable_lines(self, final=False):
         """Return the invoiceable lines for order `self`."""
@@ -621,7 +624,8 @@ class SaleOrder(models.Model):
         pending_section = None
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
-        for line in self.order_line:
+        order_lines = self._prefilter_invoiceable_lines()
+        for line in order_lines:
             if line.display_type == 'line_section':
                 # Only invoice the section if one of its lines is invoiceable
                 pending_section = line

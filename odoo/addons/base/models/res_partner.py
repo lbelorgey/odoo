@@ -8,6 +8,7 @@ import hashlib
 import pytz
 import threading
 import re
+from typing_extensions import Self
 
 import requests
 from collections import defaultdict
@@ -660,7 +661,7 @@ class Partner(models.Model):
         return result
 
     @api.model_create_multi
-    def create(self, vals_list):
+    def create(self, vals_list) -> Self:
         if self.env.context.get('import_file'):
             self._check_import_consistency(vals_list)
         for vals in vals_list:

@@ -381,13 +381,19 @@ class HrExpense(models.Model):
         for expense in self:
             if expense.state in ['done', 'approved']:
                 raise UserError(_('You cannot delete a posted or approved expense.'))
-
-    def write(self, vals):
-        if 'sheet_id' in vals:
-            self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
+        
+    def check_authorized_to_write(self,vals):
+        """
+            Check if the user is authorized to write
+        """
         if 'tax_ids' in vals or 'analytic_distribution' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
                 raise UserError(_('You are not authorized to edit this expense report.'))
+
+    def write(self, vals):
+        self.check_authorized_to_write(vals)
+        if 'sheet_id' in vals:
+            self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
         if 'reference' in vals:
             if any(not expense.is_ref_editable for expense in self):
                 raise UserError(_('You are not authorized to edit the reference of this expense report.'))

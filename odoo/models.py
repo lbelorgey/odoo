@@ -3109,7 +3109,7 @@ Fields:
             if not (field.inherited and callable(field.base_field.translate))
         ]
 
-        if fields_pre:
+        if True:
             env = self.env
             cr, user, context, su = env.args
 

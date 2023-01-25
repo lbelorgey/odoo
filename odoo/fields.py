@@ -319,7 +319,11 @@ class Field(MetaField('DummyField', (object,), {}), Generic[_T]):
 
     def new(self, **kwargs):
         """ Return a field of the same type as ``self``, with its own parameters. """
-        return type(self)(**kwargs)
+        type_args = typing.get_args(getattr(self, "__orig_class__", None))
+        t = type(self)
+        if type_args:
+            t = t[type_args[0]]
+        return t(**kwargs)
 
     def __str__(self):
         if self.name is None:

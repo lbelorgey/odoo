@@ -603,7 +603,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                         'name': expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64],
                         'account_id': expense.account_id.id,
                         'quantity': expense.quantity or 1,
-                        'price_unit': expense.unit_amount if expense.unit_amount != 0 else expense.total_amount,
+                        'price_unit': expense.unit_amount if expense.unit_amount != 0 and expense.product_has_cost else expense.total_amount,
                         'product_id': expense.product_id.id,
                         'product_uom_id': expense.product_uom_id.id,
                         'analytic_distribution': expense.analytic_distribution,

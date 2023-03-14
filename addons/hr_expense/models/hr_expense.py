@@ -381,10 +381,16 @@ class HrExpense(models.Model):
             if expense.state in ['done', 'approved']:
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
-    def write(self, vals):
+    def check_authorized_to_write(self,vals):
+        """
+            Check if the user is authorized to write
+        """
         if 'tax_ids' in vals or 'analytic_distribution' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
                 raise UserError(_('You are not authorized to edit this expense report.'))
+
+    def write(self, vals):
+        self.check_authorized_to_write(vals)
         if 'reference' in vals:
             if any(not expense.is_ref_editable for expense in self):
                 raise UserError(_('You are not authorized to edit the reference of this expense report.'))
@@ -1052,6 +1058,10 @@ class HrExpenseSheet(models.Model):
     # Actions
     # --------------------------------------------
 
+    def check_approve_action_sheet_move_create(self):
+        if any(sheet.state != 'approve' for sheet in self):
+            raise UserError(_("You can only generate accounting entry for approved expense(s)."))
+
     def action_sheet_move_create(self):
         samples = self.mapped('expense_line_ids.sample')
         if samples.count(True):
@@ -1060,8 +1070,7 @@ class HrExpenseSheet(models.Model):
             self.write({'state': 'post'})
             return
 
-        if any(sheet.state != 'approve' for sheet in self):
-            raise UserError(_("You can only generate accounting entry for approved expense(s)."))
+        self.check_approve_action_sheet_move_create()
 
         if any(not sheet.journal_id for sheet in self):
             raise UserError(_("Specify expense journal to generate accounting entries."))

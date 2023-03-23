@@ -18,6 +18,8 @@ class TestPickShip(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         dest = self.MoveObj.create({
@@ -36,6 +38,8 @@ class TestPickShip(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         self.MoveObj.create({
@@ -56,6 +60,8 @@ class TestPickShip(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         ship = self.MoveObj.create({
@@ -72,6 +78,8 @@ class TestPickShip(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         pack = self.MoveObj.create({
@@ -89,6 +97,8 @@ class TestPickShip(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         self.MoveObj.create({
@@ -423,6 +433,8 @@ class TestPickShip(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         dest = self.MoveObj.create({
             'name': self.gB.name,
@@ -439,6 +451,8 @@ class TestPickShip(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         self.MoveObj.create({
@@ -856,6 +870,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -896,6 +912,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -934,6 +952,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -978,6 +998,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1025,6 +1047,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         # Avoid to merge move3 and move4 for the test case
         self.env['ir.config_parameter'].create({
@@ -1112,6 +1136,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1157,6 +1183,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1201,6 +1229,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1239,6 +1269,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1283,6 +1315,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         product = self.kgB
         self.MoveObj.create({
@@ -1316,6 +1350,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1370,6 +1406,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1428,6 +1466,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1488,6 +1528,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1543,6 +1585,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1576,6 +1620,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1616,6 +1662,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1656,6 +1704,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1700,6 +1750,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1747,6 +1799,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1792,6 +1846,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1834,6 +1890,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
             'picking_type_id': warehouse.in_type_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_receipt_1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1848,6 +1906,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
             'picking_type_id': warehouse.in_type_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_receipt_2 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1894,6 +1954,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': warehouse.wh_input_stock_loc_id.id,
             'picking_type_id': warehouse.in_type_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_receipt_1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -1908,6 +1970,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': warehouse.wh_input_stock_loc_id.id,
             'location_dest_id': warehouse.wh_qc_stock_loc_id.id,
             'picking_type_id': warehouse.int_type_id.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1_receipt_2 = self.MoveObj.create({
             'name': self.productB.name,
@@ -1952,6 +2016,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1986,6 +2052,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_a = self.MoveObj.create({
             'name': self.productA.name,
@@ -2021,10 +2089,10 @@ class TestSinglePicking(TestStockCommon):
         picking.picking_type_id = ptout
         with picking.move_ids_without_package.new() as move:
             move.product_id = self.productA
-            move.product_uom_qty = 10
+            move.quantity_done = 10
         picking = picking.save()
-        self.assertEqual(picking.immediate_transfer, False)
-        self.assertEqual(picking.state, 'draft')
+        self.assertEqual(picking.immediate_transfer, True)
+        self.assertEqual(picking.state, 'assigned')
 
         picking = Form(picking)
         picking.move_ids_without_package.remove(0)
@@ -2040,6 +2108,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_1 = self.MoveObj.create({
             'name': self.productA.name,
@@ -2072,6 +2142,8 @@ class TestSinglePicking(TestStockCommon):
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
             'move_type': 'one',
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_3 = self.MoveObj.create({
             'name': self.productA.name,
@@ -2095,13 +2167,11 @@ class TestSinglePicking(TestStockCommon):
 
         # The autocoform ran, the picking shoud be confirmed and reservable.
         self.assertEqual(delivery_order.state, 'confirmed')
-        self.assertEqual(delivery_order.show_mark_as_todo, False)
         self.assertEqual(delivery_order.show_check_availability, True)
 
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(delivery_order.show_check_availability, False)
-        self.assertEqual(delivery_order.show_mark_as_todo, False)
 
         stock_location = self.env['stock.location'].browse(self.stock_location)
         self.assertEqual(self.env['stock.quant']._gather(self.productA, stock_location).reserved_quantity, 10.0)
@@ -2116,7 +2186,6 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
-            'immediate_transfer': True,
             'move_ids_without_package': [(0, 0, {
                 'name': self.productA.name,
                 'product_id': self.productA.id,
@@ -2136,7 +2205,6 @@ class TestSinglePicking(TestStockCommon):
 
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(delivery_order.show_check_availability, False)
-        self.assertEqual(delivery_order.show_mark_as_todo, False)
 
     def test_owner_1(self):
         # Required for `owner_id` to be visible in the view
@@ -2147,6 +2215,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': self.productA.name,
@@ -2219,7 +2289,7 @@ class TestSinglePicking(TestStockCommon):
         # Checks receipt has still its destination location and checks its move
         # line took the one from the putaway rule.
         self.assertEqual(receipt.location_dest_id.id, stock_location.id)
-        self.assertEqual(receipt.move_line_ids.location_dest_id.id, shelf_location.id)
+        self.assertEqual(receipt.move_line_nosuggest_ids.location_dest_id.id, shelf_location.id)
 
     def test_cancel_plan_transfer(self):
         """ Test canceling plan transfer """
@@ -2228,6 +2298,8 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
             'move_ids': [(0, 0, {
                 'name': self.productA.name,
                 'product_id': self.productA.id,
@@ -2253,7 +2325,6 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
-            'immediate_transfer': True,
             'move_line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'qty_done': 10,
@@ -2275,7 +2346,6 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
-            'immediate_transfer': True,
             'move_line_ids': [(0, 0, {
                 'product_id': self.productA.id,
                 'product_uom_id': self.productA.uom_id.id,
@@ -2326,7 +2396,9 @@ class TestStockUOM(TestStockCommon):
         picking_in = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location
+            'location_dest_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move = self.env['stock.move'].create({
             'name': 'First move with 60 GT',
@@ -2394,6 +2466,8 @@ class TestStockUOM(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         move = self.env['stock.move'].create({
@@ -3276,6 +3350,8 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         dest = self.MoveObj.create({
@@ -3294,6 +3370,8 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         self.MoveObj.create({
@@ -3323,6 +3401,8 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         customer_move = self.env['stock.move'].create({
             'name': 'customer move',
@@ -3344,6 +3424,8 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.customer_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         supplier_move = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -3381,6 +3463,8 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
             'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.MoveObj.create({
             'name': self.productA.name,
@@ -3429,6 +3513,8 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': picking_type_out1.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         # 'by_date' picking w/ 1 day before scheduled date auto-assign setting, set to 5 days in advance => shouldn't auto-assign
@@ -3489,6 +3575,8 @@ class TestAutoAssign(TestStockCommon):
             'location_id': self.customer_location,
             'location_dest_id': self.stock_location,
             'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         supplier_move = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -3568,27 +3656,3 @@ class TestAutoAssign(TestStockCommon):
         move.lot_ids = [(4, lot2.id)]
         move.lot_ids = [(4, lot3.id)]
         self.assertEqual(move.quantity_done, 3.0/12.0)
-
-    def test_update_description(self):
-        """ Create an empty picking. Adds a move on product1, select the picking type, add
-        again a move on product1. Confirm the picking. The two stock moves should be merged. """
-        product1 = self.env['product.product'].create({
-            'name': 'product',
-            'type':'product',
-        })
-        picking_form = Form(self.env['stock.picking'])
-        with picking_form.move_ids_without_package.new() as move:
-            move.product_id = product1
-            move.product_uom_qty = 10
-            move.location_id = self.env.ref('stock.stock_location_suppliers')
-            move.location_dest_id = self.env.ref('stock.stock_location_stock')
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
-        with picking_form.move_ids_without_package.new() as move:
-            move.product_id = product1
-            move.product_uom_qty = 15
-
-        picking = picking_form.save()
-        picking.action_confirm()
-
-        self.assertEqual(len(picking.move_ids), 1)
-        self.assertEqual(picking.move_ids.product_uom_qty, 25)

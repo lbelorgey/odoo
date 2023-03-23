@@ -39,6 +39,8 @@ class TestStockFlow(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         move_a = self.MoveObj.create({
             'name': self.productA.name,
@@ -175,6 +177,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         move_cust_a = self.MoveObj.create({
             'name': self.productA.name,
@@ -455,6 +459,8 @@ class TestStockFlow(TestStockCommon):
         picking_in_A = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.DozA.name,
@@ -553,6 +559,8 @@ class TestStockFlow(TestStockCommon):
         picking_in_B = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         move_in_a = self.MoveObj.create({
             'name': self.DozA.name,
@@ -745,6 +753,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': self.kgB.name,
@@ -786,6 +796,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': self.DozA.name,
@@ -906,6 +918,8 @@ class TestStockFlow(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': productKG.name,
@@ -954,6 +968,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': productKG.name,
@@ -1139,6 +1155,8 @@ class TestStockFlow(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1166,6 +1184,8 @@ class TestStockFlow(TestStockCommon):
             'name': 'testpicking',
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         move_out = self.MoveObj.create({
             'name': self.productA.name,
@@ -1196,6 +1216,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.pack_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         move_out = self.MoveObj.create({
             'name': self.productA.name,
@@ -1208,6 +1230,8 @@ class TestStockFlow(TestStockCommon):
         picking_pack = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.pack_location})
         move_pack = self.MoveObj.create({
             'name': self.productA.name,
@@ -1221,6 +1245,8 @@ class TestStockFlow(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         move_in = self.MoveObj.create({
             'name': self.productA.name,
@@ -1314,6 +1340,8 @@ class TestStockFlow(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.productE.name,
@@ -1341,6 +1369,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': self.productE.name,
@@ -1371,6 +1401,8 @@ class TestStockFlow(TestStockCommon):
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.productE.name,
@@ -1399,6 +1431,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         self.MoveObj.create({
             'name': self.productE.name,
@@ -1456,6 +1490,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         picking_out.move_type = 'one'
 
@@ -1494,6 +1530,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         picking_out.move_type = 'direct'
 
@@ -1532,6 +1570,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         picking_out.move_type = 'direct'
 
@@ -1569,6 +1609,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         picking_out.move_type = 'direct'
 
@@ -1593,6 +1635,8 @@ class TestStockFlow(TestStockCommon):
         picking_out = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.customer_location})
         move_mto_alone = self.MoveObj.create({
             'name': self.productA.name,
@@ -1651,6 +1695,8 @@ class TestStockFlow(TestStockCommon):
         picking = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         move_a = self.MoveObj.create({
             'name': self.productA.name,
@@ -1708,6 +1754,8 @@ class TestStockFlow(TestStockCommon):
         picking_ask = self.PickingObj.create({
             'picking_type_id': picking_type_ask.id,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1720,6 +1768,8 @@ class TestStockFlow(TestStockCommon):
         picking_always = self.PickingObj.create({
             'picking_type_id': picking_type_always.id,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1732,6 +1782,8 @@ class TestStockFlow(TestStockCommon):
         picking_never = self.PickingObj.create({
             'picking_type_id': picking_type_never.id,
             'location_id': self.supplier_location,
+            'state': 'draft',
+            'immediate_transfer': False,
             'location_dest_id': self.stock_location})
         self.MoveObj.create({
             'name': self.productA.name,
@@ -1893,11 +1945,12 @@ class TestStockFlow(TestStockCommon):
         f.picking_type_id = warehouse_company_1.out_type_id
         with f.move_ids_without_package.new() as move:
             move.product_id = product_from_company_2
-            move.product_uom_qty = 5
+            move.quantity_done = 5
         with f.move_ids_without_package.new() as move:
             move.product_id = product_from_company_3
-            move.product_uom_qty = 5
+            move.quantity_done = 5
         picking = f.save()
+        picking.action_reset_draft()
 
         picking.move_ids_without_package.write({'procure_method': 'make_to_order'})
         picking.action_confirm()
@@ -1926,9 +1979,13 @@ class TestStockFlow(TestStockCommon):
         product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'type': 'product'})
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
-        f = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        picking = self.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
+            'picking_type_id':  wh.out_type_id.id,
+            })
+        f = Form(picking, view='stock.view_picking_form')
         f.partner_id = partner
-        f.picking_type_id = wh.out_type_id
         with f.move_ids_without_package.new() as move:
             move.product_id = product
             move.product_uom_qty = 5
@@ -1949,7 +2006,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(f.state, 'confirmed')
 
     def test_picking_form_immediate_transfer(self):
-        picking_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        picking_form = Form(self.env['stock.picking'])
 
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         with picking_form.move_ids_without_package.new() as move:
@@ -1962,9 +2019,9 @@ class TestStockFlow(TestStockCommon):
 
         self.assertEqual(picking.state, 'assigned')
 
-        picking_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=False))
+        picking.action_reset_draft()
+        picking_form = Form(picking)
 
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         with picking_form.move_ids_without_package.new() as move:
             self.assertTrue(move._get_modifier('quantity_done', 'column_invisible'))
             self.assertTrue(move._get_modifier('forecast_availability', 'column_invisible'))
@@ -1996,8 +2053,9 @@ class TestStockFlow(TestStockCommon):
         picking_form.picking_type_id = picking_type
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_lot
-            move.product_uom_qty = 8
+            move.quantity_done = 8
         receipt_1 = picking_form.save()
+        receipt_1.action_reset_draft()
         receipt_1.action_confirm()
 
         move_form = Form(receipt_1.move_ids, view="stock.view_stock_move_operations")
@@ -2016,8 +2074,9 @@ class TestStockFlow(TestStockCommon):
         picking_form.picking_type_id = picking_type
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_lot
-            move.product_uom_qty = 8
+            move.quantity_done = 8
         receipt_2 = picking_form.save()
+        receipt_2.action_reset_draft()
         receipt_2.action_confirm()
 
         move_form = Form(receipt_2.move_ids, view="stock.view_stock_move_operations")
@@ -2056,8 +2115,12 @@ class TestStockFlow(TestStockCommon):
         # Checks also it still raise an error when it tries to create multiple time
         # the same serial numbers (same scenario but with SN instead of lots).
         picking_type = self.env['stock.picking.type'].browse(self.picking_type_in)
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = picking_type
+        picking = self.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
+            'picking_type_id':  picking_type.id,
+            })
+        picking_form = Form(picking)
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_serial
             move.product_uom_qty = 2
@@ -2071,8 +2134,12 @@ class TestStockFlow(TestStockCommon):
             line.lot_name = 'sn-002'
         move = move_form.save()
 
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = picking_type
+        picking = self.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
+            'picking_type_id':  picking_type.id,
+            })
+        picking_form = Form(picking)
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_serial
             move.product_uom_qty = 2
@@ -2099,6 +2166,8 @@ class TestStockFlow(TestStockCommon):
                 'picking_type_id': picking_type,
                 'location_id': from_loc,
                 'location_dest_id': to_loc,
+                'state': 'draft',
+                'immediate_transfer': False,
             })
             self.MoveObj.create({
                 'name': self.productA.name,
@@ -2151,6 +2220,8 @@ class TestStockFlow(TestStockCommon):
             'picking_type_id': picking_type_out.id,
             'location_id': stock_location.id,
             'location_dest_id': self.customer_location,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_out = self.MoveObj.create({
             'name': self.productA.name,
@@ -2176,6 +2247,8 @@ class TestStockFlow(TestStockCommon):
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_a = self.MoveObj.create({
             'name': self.productA.name,
@@ -2292,7 +2365,7 @@ class TestStockFlow(TestStockCommon):
         self.productA.tracking = 'serial'
         type_in = self.env['stock.picking.type'].browse(self.picking_type_in)
 
-        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = type_in
         with receipt_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.productA
@@ -2425,11 +2498,12 @@ class TestStockFlow(TestStockCommon):
 
         self.productA.tracking = 'lot'
 
-        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.env.ref('stock.picking_type_in')
         with receipt_form.move_ids_without_package.new() as move:
             move.product_id = self.productA
         receipt = receipt_form.save()
+        receipt.action_confirm()
 
         with Form(receipt.move_ids, view='stock.view_stock_move_nosuggest_operations') as move_form:
             with move_form.move_line_nosuggest_ids.new() as sml:

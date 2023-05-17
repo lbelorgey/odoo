@@ -4,6 +4,8 @@
 import logging
 import poplib
 import socket
+import email
+from xmlrpc import client as xmlrpclib
 
 from imaplib import IMAP4, IMAP4_SSL
 from poplib import POP3, POP3_SSL
@@ -207,7 +209,20 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         result, data = imap_server.fetch(num, '(RFC822)')
                         imap_server.store(num, '-FLAGS', '\\Seen')
                         try:
-                            res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
+                            MailThread = MailThread.with_context(**additionnal_context)
+                            if server.object_id.model == "account.invoice.import":
+                                message = data[0][1]
+                                if isinstance(message, xmlrpclib.Binary):
+                                    message = bytes(message.data)
+                                if isinstance(message, str):
+                                    message = message.encode('utf-8')
+                                message = email.message_from_bytes(message, policy=email.policy.SMTP)
+
+                                # parse the message, verify we are not in a loop by checking message_id is not duplicated
+                                msg_dict = self.message_parse(message, save_original=server.original)
+                                description = "Account invoice import - {subject}".format(subject=msg_dict.get('subject', 'Empty subject'))
+                                MailThread.with_delay(description=description).message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
+                            res_id = MailThread.message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
                         except Exception:
                             _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                             failed += 1

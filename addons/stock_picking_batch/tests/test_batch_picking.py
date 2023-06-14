@@ -36,6 +36,8 @@ class TestBatchPicking(TransactionCase):
             'picking_type_id': cls.picking_type_out,
             'partner_id': cls.client_1.id,
             'company_id': cls.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         cls.env['stock.move'].create({
@@ -55,6 +57,8 @@ class TestBatchPicking(TransactionCase):
             'picking_type_id': cls.picking_type_out,
             'partner_id': cls.client_2.id,
             'company_id': cls.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         cls.env['stock.move'].create({
@@ -72,6 +76,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': cls.customer_location.id,
             'picking_type_id': cls.picking_type_out,
             'company_id': cls.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         cls.env['stock.move'].create({
@@ -398,6 +404,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'picking_type_id': type_special_out.id,
             'company_id': self.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
             'partner_id': partner_1.id
         })
         self.env['stock.move'].create({
@@ -415,6 +423,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'picking_type_id': type_special_out.id,
             'company_id': self.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
             'partner_id': partner_2.id
         })
         self.env['stock.move'].create({
@@ -432,6 +442,8 @@ class TestBatchPicking(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'picking_type_id': type_special_out.id,
             'company_id': self.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
             'partner_id': partner_1.id
         })
         self.env['stock.move'].create({
@@ -571,6 +583,8 @@ class TestBatchPicking02(TransactionCase):
             'location_id': loc1.id,
             'location_dest_id': loc2.id,
             'picking_type_id': self.picking_type_internal.id,
+            'state': 'draft',
+            'immediate_transfer': False,
             'move_ids': [(0, 0, {
                 'name': 'test_put_in_pack_from_multiple_pages',
                 'location_id': loc1.id,
@@ -610,6 +624,8 @@ class TestBatchPicking02(TransactionCase):
             'location_dest_id': loc2.id,
             'picking_type_id': self.picking_type_internal.id,
             'company_id': self.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': self.productA.name,
@@ -626,6 +642,8 @@ class TestBatchPicking02(TransactionCase):
             'location_dest_id': loc2.id,
             'picking_type_id': self.picking_type_internal.id,
             'company_id': self.env.company.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': self.productB.name,

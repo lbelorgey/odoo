@@ -2670,6 +2670,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_stock_pack = self.env['stock.move'].create({
             'name': 'test_link_assign_7',
@@ -2684,6 +2686,8 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_pack_cust = self.env['stock.move'].create({
             'name': 'test_link_assign_7',
@@ -2785,6 +2789,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_stock_pack = self.env['stock.move'].create({
             'name': 'test_link_assign_7',
@@ -2799,6 +2805,8 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_pack_cust = self.env['stock.move'].create({
             'name': 'test_link_assign_7',
@@ -2852,6 +2860,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_stock_pack = self.env['stock.move'].create({
             'name': 'test_link_assign_9',
@@ -2866,6 +2876,8 @@ class StockMove(TransactionCase):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move_pack_cust = self.env['stock.move'].create({
             'name': 'test_link_assign_0',
@@ -3218,6 +3230,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'partner_id': customer.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
 
         p01_move = self.env['stock.move'].create({
@@ -4064,6 +4078,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'partner_id': owner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         # move from shelf1
         move1 = self.env['stock.move'].create({
@@ -4215,6 +4231,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'test_immediate_validate_1',
@@ -4247,6 +4265,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'test_immediate_validate_2',
@@ -4299,6 +4319,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         product1_move = self.env['stock.move'].create({
             'name': 'product1_move',
@@ -4360,6 +4382,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         # move from shelf1
         self.env['stock.move'].create({
@@ -4393,6 +4417,8 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_type_id': picking_type_id.id,
+            'immediate_transfer': False,
+            'state': 'draft',
         })
         self.env['stock.move'].create({
             'name': 'move1',
@@ -4448,6 +4474,8 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_type_id': picking_type.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'product1_move',
@@ -4492,6 +4520,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'test_immediate_validate_2',
@@ -4525,6 +4555,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'test_immediate_validate_8_1',
@@ -4541,6 +4573,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'test_immediate_validate_8_2',
@@ -4557,6 +4591,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': 'test_immediate_validate_8_3',
@@ -4595,8 +4631,12 @@ class StockMove(TransactionCase):
         picking_type_receipt.use_create_lots = False
         picking_type_receipt.use_existing_lots = False
 
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = picking_type_receipt
+        internal_transfer = self.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
+            'picking_type_id': picking_type_receipt.id,
+        })
+        picking_form = Form(internal_transfer)
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.product_serial
             move.product_uom_qty = 4
@@ -4628,8 +4668,12 @@ class StockMove(TransactionCase):
             'company_id': self.env.company.id,
         })
         self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 10, lot_id=lot)
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = picking_type_internal
+        internal_transfer = self.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
+            'picking_type_id': picking_type_internal.id,
+            })
+        picking_form = Form(internal_transfer)
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.product_lot
             move.product_uom_qty = 4
@@ -4677,7 +4721,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
         })
         self.assertEqual(move1.state, 'draft')
-        self.assertEqual(move1.product_uom_qty, 1)
+        self.assertEqual(move1.product_uom_qty, 0)
         move1.product_uom_qty = 100
         move1.product_id = self.product_serial
         move1._onchange_product_id()
@@ -4761,6 +4805,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'A move to confirm and scrap its product',
@@ -4806,6 +4852,8 @@ class StockMove(TransactionCase):
             'location_dest_id': self.customer_location.id,
             'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'A move to confirm and scrap its product',
@@ -4909,6 +4957,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': scrap_location.id,
             'picking_type_id': internal_operation.id,
+            'state': 'draft',
+            'immediate_transfer': False,
             'move_ids': [(0, 0, {
                 'name': 'Scrap %s' % product.display_name,
                 'location_id': self.stock_location.id,
@@ -5254,7 +5304,6 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
-            'immediate_transfer': True,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5279,6 +5328,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5373,6 +5424,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5415,6 +5468,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5458,6 +5513,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5505,6 +5562,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5570,8 +5629,12 @@ class StockMove(TransactionCase):
         }]).action_apply_inventory()
 
         # Creates a delivery for a bunch of products.
-        delivery_form = Form(self.env['stock.picking'])
-        delivery_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        delivery_form = self.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        delivery_form = Form(delivery_form)
         with delivery_form.move_ids_without_package.new() as move:
             move.product_id = self.product
             move.product_uom_qty = 10
@@ -5694,6 +5757,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5749,6 +5814,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5793,6 +5860,8 @@ class StockMove(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
@@ -5906,7 +5975,10 @@ class StockMove(TransactionCase):
         picking_out = self.env['stock.picking'].create({
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id})
+            'location_dest_id': self.customer_location.id,
+            'state': 'draft',
+            'immediate_transfer': False,
+        })
         move = self.env['stock.move'].create({
             'name': product.name,
             'product_id': product.id,
@@ -5941,6 +6013,8 @@ class StockMove(TransactionCase):
             'picking_type_id': internal_transfer.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
+            'state': 'draft',
+            'immediate_transfer': False,
         })
         self.env['stock.move'].create({
             'name': self.product_consu.name,
@@ -6025,6 +6099,8 @@ class StockMove(TransactionCase):
             'picking_type_id': internal_transfer.id,
             'location_id': stock_location.id,
             'location_dest_id': shelf_location.id,
+            'state': 'draft',
+            'immediate_transfer': False,
             'move_line_nosuggest_ids': [Command.create({
                 'product_id': self.product.id,
                 'qty_done': 1.0
@@ -6060,7 +6136,7 @@ class StockMove(TransactionCase):
         """
         Since updating the move's `lot_ids` field for product tracked by serial numbers will
         also updates the move's `quantity_done`, this test checks the move's move lines will be
-        correclty updated and consequently its picking can be validated.
+        correctly updated and consequently its picking can be validated.
         """
         sn = self.env['stock.lot'].create({
             'name': 'test_lot_001',
@@ -6068,8 +6144,12 @@ class StockMove(TransactionCase):
             'company_id': self.env.company.id,
         })
 
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        internal_transfer = self.env['stock.picking'].create({
+            'state': 'draft',
+            'immediate_transfer': False,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        picking_form = Form(internal_transfer)
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.product_serial
             move.product_uom_qty = 1

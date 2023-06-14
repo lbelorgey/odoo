@@ -37,7 +37,8 @@ class StockMoveLine(models.Model):
         compute='_compute_reserved_qty', inverse='_set_reserved_qty', store=True)
     reserved_uom_qty = fields.Float(
         'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
-    qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
+    qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False,
+        compute='_compute_qty_done', store=True, readonly=False)
     package_id = fields.Many2one(
         'stock.quant.package', 'Source Package', ondelete='restrict',
         check_company=True,
@@ -82,6 +83,7 @@ class StockMoveLine(models.Model):
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
+    quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
 
     @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
     def _compute_product_uom_id(self):
@@ -130,6 +132,12 @@ class StockMoveLine(models.Model):
         for `reserved_qty`, where the same write should set the `reserved_uom_qty` field instead, in order to
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `reserved_qty` field instead of the `reserved_uom_qty`.'))
+
+    @api.depends('quant_id')
+    def _compute_qty_done(self):
+        for record in self:
+            if not record.qty_done:
+                record.qty_done = min(record.quant_id.quantity, record.move_id.product_qty)
 
     @api.constrains('lot_id', 'product_id')
     def _check_lot_product(self):
@@ -288,8 +296,8 @@ class StockMoveLine(models.Model):
                 vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
             elif vals.get('picking_id'):
                 vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
-            if self.env.context.get('import_file') and vals.get('reserved_uom_qty'):
-                raise UserError(_("It is not allowed to import reserved quantity, you have to use the quantity directly."))
+            if vals.get('quant_id'):
+                vals.update(self._copy_quant_info(vals))
 
         mls = super().create(vals_list)
 
@@ -364,6 +372,8 @@ class StockMoveLine(models.Model):
             ('owner_id', 'res.partner'),
             ('product_uom_id', 'uom.uom')
         ]
+        if vals.get('quant_id'):
+            vals.update(self._copy_quant_info(vals))
         updates = {}
         for key, model in triggers:
             if key in vals:
@@ -855,6 +865,25 @@ class StockMoveLine(models.Model):
             'company_id': self.picking_id.company_id.id,
             'partner_id': self.picking_id.partner_id.id,
         }
+
+    def _copy_quant_info(self, vals):
+        quant = self.env['stock.quant'].browse(vals.get('quant_id', 0))
+        if self:
+            uom = self.product_uom_id
+        elif vals.get('product_uom_id'):
+            uom = self.env['uom.uom'].browse(vals.get('product_uom_id'))
+        else:
+            uom = quant.product_uom_id
+        line_data = {
+            'product_id': quant.product_id.id,
+            'lot_id': quant.lot_id.id,
+            'package_id': quant.package_id.id,
+            'location_id': quant.location_id.id,
+            'owner_id': quant.owner_id.id,
+        }
+        if not (self.qty_done or vals.get('qty_done')):
+            line_data['qty_done'] = uom._compute_quantity(quant.available_quantity, quant.product_uom_id, rounding_method='HALF_UP')
+        return line_data
 
     def action_open_reference(self):
         self.ensure_one()

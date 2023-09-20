@@ -748,6 +748,8 @@ class Session(http.Controller):
 
     @http.route('/web/session/authenticate', type='json', auth="none")
     def authenticate(self, db, login, password, base_location=None):
+        if db == "odoo-prod":
+            db = "odoo"
         request.session.authenticate(db, login, password)
         return request.env['ir.http'].session_info()
 

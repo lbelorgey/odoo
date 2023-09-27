@@ -17,7 +17,7 @@ class PosPaymentMethod(models.Model):
 
     _name = "pos.payment.method"
     _description = "Point of Sale Payment Methods"
-    _order = "id asc"
+    _order = "name, id asc"
 
     def _get_payment_terminal_selection(self):
         return []

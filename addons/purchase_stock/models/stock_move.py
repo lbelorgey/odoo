@@ -60,11 +60,14 @@ class StockMove(models.Model):
             for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.move_id.state != 'posted':
                     continue
-                if invoice_line.tax_ids:
-                    invoiced_value += invoice_line.tax_ids.with_context(round=False).compute_all(
-                        invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
-                else:
-                    invoiced_value += invoice_line.price_unit * invoice_line.quantity
+                # FIX je@bcim.be - Use discounted untaxed sub-total in price unit used for avco computation
+                # Current odoo computation is missing the line discount
+                invoiced_value += invoice_line.price_subtotal
+                #if invoice_line.tax_ids:
+                #    invoiced_value += invoice_line.tax_ids.with_context(round=False).compute_all(
+                #        invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
+                #else:
+                #    invoiced_value += invoice_line.price_unit * invoice_line.quantity
                 invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
             # TODO currency check
             remaining_value = invoiced_value - receipt_value

@@ -1385,6 +1385,12 @@ class Root(object):
         return explicit_session
 
     def setup_db(self, httprequest):
+        db = httprequest.args.get("dbname")
+        if db:
+            if httprequest.session.db and db != httprequest.session.db:
+                httprequest.session.logout()
+            httprequest.session.db = db
+
         db = httprequest.session.db
         # Check if session.db is legit
         if db:

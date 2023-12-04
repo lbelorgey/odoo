@@ -6778,7 +6778,7 @@ msgstr "Vidéo"
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
-msgstr "Vue"
+msgstr "Voir"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0

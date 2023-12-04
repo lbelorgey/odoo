@@ -242,7 +242,7 @@
             <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
             <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
             <t t-set="base_url" t-value="record.get_base_url()"/>
-            <t t-set="share_url" t-value="record._get_share_url(redirect=True, signup_partner=notification_is_customer, share_token=notification_is_customer)"/>
+            <t t-set="share_url" t-value="record._get_share_url(redirect=False, signup_partner=notification_is_customer, share_token=notification_is_customer)"/>
             <t t-set="access_url" t-value="is_online and share_url and base_url + share_url or ''"/>
             <t t-set="access_name">
                 View <t t-esc="model_description or 'document'"/>
@@ -289,6 +289,18 @@
             <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 32px 0px 4px 0px;"/>
             <b t-esc="company.name"/><br/>
             <div style="color: #999999">
+                <t t-esc="company.street"/>
+                <t t-if="company.street2"> -
+                    <t t-esc="company.street2"/>
+                </t>
+                <t t-esc="company.zip"/>
+                <t t-if="company.city"> -
+                    <t t-esc="company.city"/>
+                </t>
+                <t t-if="company.country_id"> -
+                    <t t-esc="company.country_id.name"/>
+                </t>
+                <br />
                 <t t-esc="company.phone"/>
                 <t t-if="company.email"> |
                     <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>

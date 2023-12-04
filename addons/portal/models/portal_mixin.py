@@ -47,9 +47,11 @@ class PortalMixin(models.AbstractModel):
         """
         self.ensure_one()
         params = {
-            'model': self._name,
-            'res_id': self.id,
+            'dbname': self.env.cr.dbname,
         }
+        if redirect:
+            params['model'] = self._name
+            params['res_id'] = self.id
         if share_token and hasattr(self, 'access_token'):
             params['access_token'] = self._portal_ensure_token()
         if pid:

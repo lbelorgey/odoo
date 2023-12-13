@@ -300,11 +300,7 @@ class AccountPaymentRegister(models.TransientModel):
         # The communication can't be computed in '_compute_from_lines' because
         # it's a compute editable field and then, should be computed in a separated method.
         for wizard in self:
-            if wizard.can_edit_wizard:
-                batches = wizard._get_batches()
-                wizard.communication = wizard._get_batch_communication(batches[0])
-            else:
-                wizard.communication = False
+            wizard.communication = False
 
     @api.depends('can_edit_wizard')
     def _compute_group_payment(self):

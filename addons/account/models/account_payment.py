@@ -244,13 +244,7 @@ class AccountPayment(models.Model):
 
         payment_display_name = self._prepare_payment_display_name()
 
-        default_line_name = self.env['account.move.line']._get_default_line_name(
-            _("Internal Transfer") if self.is_internal_transfer else payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
-            self.amount,
-            self.currency_id,
-            self.date,
-            partner=self.partner_id,
-        )
+        default_line_name = _("Internal Transfer") if self.is_internal_transfer else payment_display_name['%s-%s' % (self.payment_type, self.partner_type)]
 
         line_vals_list = [
             # Liquidity line.

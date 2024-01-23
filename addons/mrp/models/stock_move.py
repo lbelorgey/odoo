@@ -282,6 +282,8 @@ class StockMove(models.Model):
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
             action['context']['show_destination_location'] = False
             action['context']['active_mo_id'] = self.raw_material_production_id.id
+            action['context']['show_lots_m2o'] = self.has_tracking != 'none' and not self.picking_type_id.use_create_components_lots
+            action['context']['show_lots_text'] = self.has_tracking != 'none' and self.picking_type_id.use_create_components_lots
         elif self.production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
             action['context']['show_source_location'] = False

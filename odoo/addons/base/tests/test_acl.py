@@ -53,11 +53,7 @@ class TestACL(TransactionCase):
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
         self.assertIn('decimal_places', original_fields, "'decimal_places' field must be properly visible before the test")
-<<<<<<< HEAD
-        self.assertNotEquals(view_arch.xpath("//field[@name='decimal_places'][@nolabel='1']"), [],
-=======
-        self.assertNotEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
->>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)
+        self.assertNotEqual(view_arch.xpath("//field[@name='decimal_places'][@nolabel='1']"), [],
                              "Field 'decimal_places' must be found in view definition before the test")
         self.assertNotEquals(view_arch.xpath("//label[@for='decimal_places']"), [],
                              "Label for 'decimal_places' must be found in view definition before the test")

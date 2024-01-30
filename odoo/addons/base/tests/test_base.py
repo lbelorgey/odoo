@@ -333,15 +333,9 @@ class TestBase(TransactionCase):
         p3 = res_partner.search([('email', '=', 'ugr@sunhelm.com')], limit=1)
 
         for p in (p0, p1, p11, p2, p3):
-<<<<<<< HEAD
-            self.assertEquals(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
-            self.assertEquals(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
-        sunhelmvat = 'BE0123456749'
-=======
             self.assertEqual(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
             self.assertEqual(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
-        sunhelmvat = 'BE0123456789'
->>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)
+        sunhelmvat = 'BE0123456749'
         sunhelm.write({'vat': sunhelmvat})
         for p in (p0, p1, p11, p2, p3):
             self.assertEqual(p.vat, sunhelmvat, 'Commercial fields must be automatically and recursively synced')

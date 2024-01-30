@@ -30,11 +30,8 @@ class TestPyLint(TransactionCase):
         'unreachable',
 
         'mixed-indentation',
-<<<<<<< HEAD
         'sql-injection',
-=======
         'deprecated-method',
->>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)
     ]
 
     BAD_FUNCTIONS = [

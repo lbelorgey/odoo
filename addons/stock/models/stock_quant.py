@@ -449,6 +449,9 @@ class StockQuant(models.Model):
             })
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), fields.Datetime.from_string(in_date)
 
+    def _sort_quants_to_reserve(self, quants, product_id, location_id, lot_id=None, qty=False):
+        return quants
+
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Increase the reserved quantity, i.e. increase `reserved_quantity` for the set of quants
@@ -472,6 +475,7 @@ class StockQuant(models.Model):
             available_quantity = sum(quants.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=rounding) > 0).mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
                 raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % product_id.display_name)
+            quants = self._sort_quants_to_reserve(quants, product_id, location_id, lot_id, quantity)
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
@@ -488,6 +492,8 @@ The correction could unreserve some operations with problematics products.""") %
                     raise UserError(_('It is not possible to unreserve more products of %s than you have in stock. Contact an administrator.') % product_id.display_name)
         else:
             return reserved_quants
+
+
 
         for quant in quants:
             if float_compare(quantity, 0, precision_rounding=rounding) > 0:

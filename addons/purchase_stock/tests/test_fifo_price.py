@@ -313,9 +313,8 @@ class TestFifoPrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 
         original_out_move = outgoing_shipment_neg.move_lines[0]
-<<<<<<< HEAD
-        self.assertEquals(original_out_move.product_id.value_svl,  12000.0, 'Value of the move should be 12000')
-        self.assertEquals(original_out_move.product_id.qty_available, 150.0, 'Qty available should be 150')
+        self.assertEqual(original_out_move.product_id.value_svl,  12000.0, 'Value of the move should be 12000')
+        self.assertEqual(original_out_move.product_id.qty_available, 150.0, 'Qty available should be 150')
 
     def test_01_test_fifo(self):
         """" This test ensures that unit price keeps its decimal precision """
@@ -365,7 +364,3 @@ class TestFifoPrice(TestPurchase):
         self.assertEqual(super_product.standard_price, 0.035)
         self.assertEqual(super_product.value_svl, 35.0)
         self.assertEqual(picking.move_lines.price_unit, 0.035)
-=======
-        self.assertEqual(original_out_move.product_id.value_svl,  12000.0, 'Value of the move should be 12000')
-        self.assertEqual(original_out_move.product_id.qty_available, 150.0, 'Qty available should be 150')
->>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)

@@ -406,8 +406,7 @@ class TestSaleMrpFlow(TransactionCase):
 
         # Check the components quantities that backorder_4 should have
         for move in backorder_4.move_lines:
-<<<<<<< HEAD
-            self.assertEquals(move.product_qty, 1)
+            self.assertEqual(move.product_qty, 1)
 
     def test_01_purchase_mrp_kit_qty_change(self):
         self.partner = self.env.ref('base.res_partner_1')
@@ -431,6 +430,3 @@ class TestSaleMrpFlow(TransactionCase):
         self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty,4, "The amount of the kit components must be updated when changing the quantity of the kit.")
         self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty,2, "The amount of the kit components must be updated when changing the quantity of the kit.")
         self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty,6, "The amount of the kit components must be updated when changing the quantity of the kit.")
-=======
-            self.assertEqual(move.product_qty, 1)
->>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)

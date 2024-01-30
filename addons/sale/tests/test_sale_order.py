@@ -383,8 +383,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # Call again for st_line_3, it should find sale_order based on reference
         res = self.env['account.reconciliation.widget'].get_bank_statement_line_data([st_line3.id])
         line = res.get('lines', [{}])[0]
-<<<<<<< HEAD
-        self.assertEquals(line.get('sale_order_ids', []), [so.id])
+        self.assertEqual(line.get('sale_order_ids', []), [so.id])
 
     def test_group_invoice(self):
         """ Test that invoicing multiple sales order for the same customer works. """
@@ -627,6 +626,3 @@ class TestSaleOrder(TestCommonSaleNoChart):
         name_search_data = self.env['sale.order.line'].name_search(name=self.sale_order.name)
         sol_ids_found = dict(name_search_data).keys()
         self.assertEqual(list(sol_ids_found), self.sale_order.order_line.ids)
-=======
-        self.assertEqual(line.get('sale_order_ids', []), [so.id])
->>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)

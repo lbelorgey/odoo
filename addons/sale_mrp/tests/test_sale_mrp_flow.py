@@ -1052,15 +1052,10 @@ class TestSaleMrpFlow(common.SavepointCase):
 
         # Check that not enough enough quantities are available in the warehouse set in the SO
         # but there are enough quantities in Warehouse 1 for 1 kit_parent
-<<<<<<< HEAD
-        self.assertEquals(kit_parent_wh_order.virtual_available, 0)
+        self.assertEqual(kit_parent_wh_order.virtual_available, 0)
         kit_parent_wh_order.invalidate_cache()
         kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
-        self.assertEquals(kit_parent_wh1.virtual_available, 1)
-=======
-        self.assertEqual(kit_parent_wh_order.virtual_available, 0)
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
->>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)
 
         # Check there arn't enough quantities available for the sale order
         self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)
@@ -1080,16 +1075,10 @@ class TestSaleMrpFlow(common.SavepointCase):
         # As 'Warehouse 2' is the warehouse linked to the SO, 3 kits should be available
         # But the quantity available in Warehouse 1 should stay 1
         kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
-<<<<<<< HEAD
-        self.assertEquals(kit_parent_wh_order.virtual_available, 3)
+        self.assertEqual(kit_parent_wh_order.virtual_available, 3)
         kit_parent_wh_order.invalidate_cache()
         kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
-        self.assertEquals(kit_parent_wh1.virtual_available, 1)
-=======
-        kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
-        self.assertEqual(kit_parent_wh_order.virtual_available, 3)
         self.assertEqual(kit_parent_wh1.virtual_available, 1)
->>>>>>> 4f03a5f136ab ([FIX] *: remove old deprecated modules/functions)
 
         # Check there arn't enough quantities available for the sale order
         self.assertTrue(float_compare(order_line.virtual_available_at_date - order_line.product_uom_qty, 0, precision_rounding=line.product_uom.rounding) == -1)

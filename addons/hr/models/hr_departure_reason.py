@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -22,8 +22,9 @@ class DepartureReason(models.Model):
             'retired': 340,
         }
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_default_departure_reasons(self):
+
+    def unlink(self):
         master_reasons = [self.env.ref('hr.departure_fired', False), self.env.ref('hr.departure_resigned', False), self.env.ref('hr.departure_retired', False)]
         if any(reason in master_reasons for reason in self):
             raise UserError(_('Default departure reasons cannot be deleted.'))
+        return super().unlink()

@@ -294,7 +294,7 @@ class Channel(models.Model):
         """ Return new members per channel ID """
         return dict(
             (channel.id, (channel.group_ids.users.partner_id - channel.channel_partner_ids).ids)
-            for channel in self
+            for channel in self.with_context(active_test=False)
         )
 
     def action_unfollow(self):

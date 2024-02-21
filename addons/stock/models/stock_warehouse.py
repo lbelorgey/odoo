@@ -110,6 +110,10 @@ class Warehouse(models.Model):
     def _create_and_get_stock_location_id(self, values):
         return self.env['stock.location'].with_context(active_test=False).create(values)
 
+    def _update_view_locations_warehouse(self, view_locations):
+        self.ensure_one()
+        view_locations.write({'warehouse_id': self.id})
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -150,7 +154,8 @@ class Warehouse(models.Model):
 
             # manually update locations' warehouse since it didn't exist at their creation time
             view_location_id = self.env['stock.location'].browse(vals.get('view_location_id'))
-            (view_location_id | view_location_id.with_context(active_test=False).child_ids).write({'warehouse_id': warehouse.id})
+            view_locations = view_location_id | view_location_id.with_context(active_test=False).child_ids
+            warehouse._update_view_locations_warehouse(view_locations)
 
         self._check_multiwarehouse_group()
 

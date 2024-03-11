@@ -280,8 +280,6 @@ class StockMove(models.Model):
         for svl in stock_valuation_layers.with_context(active_test=False):
             if not svl.with_context(force_company=svl.company_id.id).product_id.valuation == 'real_time':
                 continue
-            if svl.currency_id.is_zero(svl.value):
-                continue
             svl.stock_move_id.with_context(force_company=svl.company_id.id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
 
         stock_valuation_layers._check_company()

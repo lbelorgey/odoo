@@ -727,13 +727,6 @@ class MrpProduction(models.Model):
         else:
             self.workorder_ids = False
 
-    @api.constrains('product_id', 'move_raw_ids')
-    def _check_production_lines(self):
-        for production in self:
-            for move in production.move_raw_ids:
-                if production.product_id == move.product_id:
-                    raise ValidationError(_("The component %s should not be the same as the product to produce.") % production.product_id.display_name)
-
     def write(self, vals):
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
